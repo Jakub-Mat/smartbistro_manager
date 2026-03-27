@@ -1,0 +1,36 @@
+button {
+    color: var(--primary);
+    background-color: transparent;
+    font-size: 1.2rem;
+    width: 100%;
+    display: flex;
+    text-align: left;
+    margin: 0 0 15px 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 0;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+
+#secName{
+    margin: auto;
+    color: #1A1F16;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+}
+
+#secIcon{
+    /*Wraper pro svg*/
+}
+
+svg {
+    width: var(--btnSize);
+    height: var(--btnSize);
+    margin-left: 5px;
+    margin-bottom: -2px;
+}

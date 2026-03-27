@@ -1,0 +1,23 @@
+.viewBox{
+    height: auto;
+    display: inherit;
+    border: transparent;
+}
+
+#icon {
+    color: var(--primary);
+    margin: auto;
+    width: var(--btnSize);
+    height: var(--btnSize);
+}
+
+#label{
+    margin: auto;
+    padding-right: 5px;
+    padding-left: 3px;
+
+}
+
+#specialIcon:hover{
+        cursor: pointer;
+}

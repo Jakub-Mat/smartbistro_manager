@@ -1,0 +1,32 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+#layout-grid {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 60px 1fr;
+  width: 100vw;
+  height: 100vh;
+
+  grid-template-areas:
+  "sideMenu topbar"
+  "sideMenu content";
+
+}
+#layout-grid #sideMenu {
+  grid-area: sideMenu;
+  border-right: #1A1F16 solid;
+}
+
+#layout-grid #topBar {
+  grid-area: topbar;
+  background-color: var(--bg);
+  justify-content: space-around;
+
+}
+#layout-grid #content {
+  grid-area: content;
+  background-color: rgba(123,74,89, 0.5);
+}
