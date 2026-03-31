@@ -29,4 +29,5 @@
 #layout-grid #content {
   grid-area: content;
   background-color: rgba(123,74,89, 0.5);
+  
 }
