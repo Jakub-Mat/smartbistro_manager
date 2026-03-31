@@ -24,10 +24,10 @@
   grid-area: topbar;
   background-color: var(--bg);
   justify-content: space-around;
+  border-bottom: #1A1F16 solid;
 
 }
 #layout-grid #content {
   grid-area: content;
-  background-color: rgba(123,74,89, 0.5);
-  
+
 }
