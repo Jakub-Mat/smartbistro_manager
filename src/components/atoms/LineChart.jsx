@@ -28,7 +28,7 @@ const LineChart = () => {
         labels: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen'],
         datasets: [
             {
-                label: 'Prodej za aktuální Měsíc',
+                label: 'Prodej za aktuální rok',
                 data: [4_300, 10_800, 15_000,19_500, 20_100, 24_500, 40_000],
                 fill: false, // Pokud true, oblast pod čárou bude vybarvená
                 borderColor: '#4F9D69', // primary definováná v index.css
@@ -38,7 +38,7 @@ const LineChart = () => {
                 pointHoverRadius: 8, // Velikost bodů při najetí myší
             },
             {
-                label: 'Prodej za minulý měsíc',
+                label: 'Prodej za minulý rok',
                 data: [5_000, 10_000, 14_000, 16_000, 18_000, 20_000, 23_000],
                 fill: false,
                 borderColor: '#EEE82C',
@@ -57,7 +57,7 @@ const LineChart = () => {
                 position: 'bottom',
             },
             title: {
-                display: true,
+                display: false,
                 text: 'Zisk za aktuální půl rok',
             },
         },

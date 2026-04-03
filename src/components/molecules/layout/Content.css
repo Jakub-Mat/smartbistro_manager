@@ -1,5 +1,33 @@
+#content{
+    display: grid;
+    grid-template-areas:
+    "linechart orderTable"
+    "stockTable orderTable";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
 #linechart{
+    grid-area: linechart;
     text-align: center;
     border: #1A1F16 solid;
 }
+
+#chartTitle{
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+
+}
+
+#stockTable{
+    grid-area: stockTable;
+    border: #1A1F16 solid;
+}
+
+#orderTable{
+    grid-area: orderTable;
+    border: #1A1F16 solid;
+}
+
 
