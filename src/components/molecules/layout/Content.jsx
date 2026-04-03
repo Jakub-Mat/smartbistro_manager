@@ -1,5 +1,5 @@
 import './Content.css'
-import LineChart from "./LineChart.jsx";
+import LineChart from "../../atoms/other/LineChart.jsx";
 
 
 export default function Content() {

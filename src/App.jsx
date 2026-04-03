@@ -1,7 +1,7 @@
 import './App.css'
-import SideMenu from "./components/SideMenu.jsx";
-import TopBar from "./components/TopBar.jsx";
-import Content from "./components/Content.jsx"
+import SideMenu from "./components/molecules/layout/SideMenu.jsx";
+import TopBar from "./components/molecules/layout/TopBar.jsx";
+import Content from "./components/molecules/layout/Content.jsx"
 function App() {
 
   return (

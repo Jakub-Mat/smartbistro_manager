@@ -1,4 +1,4 @@
-import logo from '../assets/LogoSmarBistro.png'
+import logo from '../../../assets/LogoSmarBistro.png'
 export default function logoPic() {
     return (
         <>
