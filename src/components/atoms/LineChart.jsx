@@ -8,6 +8,7 @@ import {
     Title,
     Tooltip,
     Legend,
+    Filler
 } from 'chart.js';
 
 // Registrace prvků potřebných pro spojnicový graf
@@ -18,30 +19,33 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 );
 
 const LineChart = () => {
     const data = {
-        labels: ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Neděle'],
+        labels: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen'],
         datasets: [
             {
-                label: 'Návštěvnost webu',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                label: 'Prodej za aktuální Měsíc',
+                data: [4_300, 10_800, 15_000,19_500, 20_100, 24_500, 40_000],
                 fill: false, // Pokud true, oblast pod čárou bude vybarvená
-                borderColor: 'rgb(75, 192, 192)', // Barva čáry
-                backgroundColor: 'rgba(75, 192, 192, 0.5)', // Barva bodů
+                borderColor: '#4F9D69', // primary definováná v index.css
+                backgroundColor: '#4F9D69',
                 tension: 0.3, // Zakřivení čáry (0 = ostré úhly, vyšší číslo = hladší křivka)
-                pointRadius: 5, // Velikost bodů
+                pointRadius: 4, // Velikost bodů
                 pointHoverRadius: 8, // Velikost bodů při najetí myší
             },
             {
-                label: 'Prodeje',
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: true,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                label: 'Prodej za minulý měsíc',
+                data: [5_000, 10_000, 14_000, 16_000, 18_000, 20_000, 23_000],
+                fill: false,
+                borderColor: '#EEE82C',
+                backgroundColor: '#EEE82C',
                 tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 8,
             }
         ],
     };
@@ -50,11 +54,11 @@ const LineChart = () => {
         responsive: true,
         plugins: {
             legend: {
-                position: 'top',
+                position: 'bottom',
             },
             title: {
                 display: true,
-                text: 'Týdenní statistiky',
+                text: 'Zisk za aktuální půl rok',
             },
         },
         scales: {
