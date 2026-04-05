@@ -6,17 +6,17 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
-import { MdAdd as AddIcon } from 'react-icons/md';
+import { FaRegFilePdf as AddIcon} from "react-icons/fa6";
 
 
 function createData(
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
+    order_id,
+    order_time,
+    pocet_ks,
+    cena,
+    PDF,
 ) {
-    return { name, calories, fat, carbs, protein }
+    return { name: order_id, calories: order_time, fat: pocet_ks, carbs: cena, protein: PDF }
 }
 
 const rows = [
@@ -37,11 +37,10 @@ export default function StockTable({ onPlusButtonClick }) {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell align="right">Calories</TableCell>
-                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                        <TableCell>ID objednávky </TableCell>
+                        <TableCell align="right">čas objednávky</TableCell>
+                        <TableCell align="right">Počet ks</TableCell>
+                        <TableCell align="right">Cena</TableCell>
                         <TableCell align="center">Actions</TableCell>
                     </TableRow>
                 </TableHead>
@@ -57,7 +56,6 @@ export default function StockTable({ onPlusButtonClick }) {
                             <TableCell align="right">{row.calories}</TableCell>
                             <TableCell align="right">{row.fat}</TableCell>
                             <TableCell align="right">{row.carbs}</TableCell>
-                            <TableCell align="right">{row.protein}</TableCell>
                             <TableCell align="center">
                                 <IconButton
                                     aria-label={`add ${row.name}`}

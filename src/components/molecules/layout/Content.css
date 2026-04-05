@@ -5,29 +5,37 @@
     "stockTable orderTable";
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
+    /*max-width: 82vw; ještě si nejsem jist*/
 }
 
 #linechart{
     grid-area: linechart;
     text-align: center;
     border: #1A1F16 solid;
+    margin: 20px;
 }
 
-#chartTitle{
-    color: var(--primary);
-    font-weight: bold;
-    font-size: 1.1rem;
-
-}
 
 #stockTable{
     grid-area: stockTable;
     border: #1A1F16 solid;
+    overflow-y: auto;
+    margin: 20px;
 }
 
 #orderTable{
     grid-area: orderTable;
-    border: #1A1F16 solid;
+    border: #1A1F16 dotted;
+    margin: 20px;
 }
+
+.contentTitle{
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+
 
 

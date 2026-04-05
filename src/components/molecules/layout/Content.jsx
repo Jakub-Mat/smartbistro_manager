@@ -9,7 +9,7 @@ export default function Content() {
             <div id="content">
                 {/* Graf přehledů zisku */}
                 <div id="linechart">
-                    <span id="chartTitle">
+                    <span className="contentTitle">
                         Přehled přijmů za rok 2024 a 2025
                     </span>
                     <div id="chartWrapper">
@@ -18,17 +18,22 @@ export default function Content() {
                 </div>
                 {/*Tabulka položek ve skladu s tlačítkem rychlého objednání*/}
                 <div id="stockTable">
-                    <span>
-                        Zboží ve skladu
-                    </span>
+                    <div className="contentTitle">
+                        <span>
+                            Zboží ve skladu
+                         </span>
+                    </div>
+
                     <div id="stockTableWrapper">
                         <StockTable onPlusButtonClick={undefined}/>
                     </div>
                 </div>
                 <div id="orderTable">
-                    <span>
-                        Objednávky za dnešní den
-                    </span>
+                    <div className="contentTitle">
+                        <span>
+                            Objednávky za dnešní den
+                        </span>
+                    </div>
                     <div id="orderTableWrapper">
                         <OrderTable onPlusButtonClick={undefined}/>
                     </div>
