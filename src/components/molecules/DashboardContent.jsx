@@ -1,4 +1,4 @@
-import './Content.css'
+import '../pages/Content.css'
 import LineChart from '../atoms/LineChart.jsx'
 import StockTable from '../atoms/StockTable.jsx'
 import OrderTable from '../atoms/OrderTable.jsx'
@@ -7,7 +7,7 @@ import { useState } from 'react'
 import ingredientData from '../../assets/suroviny.json'
 const STORAGE_KEY = 'smartbistro_ingredients'
 
-export default function Content() {
+export default function DashboardContent() {
 
     //----------render ingredient data z localStorage nebo json file jestli je localStorage prázdný--------
     function loadIngredients() {

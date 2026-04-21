@@ -1,8 +1,8 @@
 import './RouteButton.css'
 
-export default function RouteButton({label,icon,onClick}) {
+export default function RouteButton({label,icon}) {
     return (
-        <button onClick={onClick}>
+        <button>
             <span id="secIcon">
                 {icon}
             </span>

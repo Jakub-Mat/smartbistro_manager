@@ -1,20 +1,27 @@
 import './App.css'
-import SideMenu from "./components/molecules/SideMenu.jsx";
-import TopBar from "./components/molecules/TopBar.jsx";
-import Content from "./components/molecules/Content.jsx"
+import {Navigate, Route, Routes} from "react-router-dom";
+import AppLayout from "./components/organisms/AppLayout.jsx";
+import DashboardPage from "./components/pages/DashboardPage.jsx";
+import AnalysisPage from "./components/pages/AnalysisPage.jsx";
+import MenuPage from "./components/pages/MenuPage.jsx";
+import StockManagementPage from "./components/pages/StockManagementPage.jsx";
 
 
 
 function App() {
 
   return (
-    <>
-      <div id="layout-grid">
-        <SideMenu/>
-        <TopBar/>
-        <Content/>
-      </div>
-    </>
+    <Routes>
+      <Route element={<AppLayout/>}>
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<DashboardPage/>} />
+          <Route path="/analysis" element={<AnalysisPage/>} />
+          <Route path="/menu" element={<MenuPage/>} />
+          <Route path="/stock" element={<StockManagementPage/>} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+    </Routes>
   )
 }
 

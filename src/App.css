@@ -21,12 +21,22 @@
   border-right: #1A1F16 solid;
 }
 
+#layout-grid #sideMenu a {
+  text-decoration: none;
+}
+
+#layout-grid #sideMenu a.active {
+  color: white;
+  text-decoration: #1A1F16 underline;
+  border-radius: 12px;
+  display: block;
+}
+
 #layout-grid #topBar {
   grid-area: topbar;
   background-color: var(--bg);
   justify-content: space-around;
   border-bottom: #1A1F16 solid;
-
 }
 #layout-grid #content {
   grid-area: content;
