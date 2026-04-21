@@ -1,4 +1,4 @@
-import IconLabel from "../../atoms/labels/IconLabel.jsx";
+import IconLabel from "../atoms/IconLabel.jsx";
 import { MdStore, MdLocationOn, MdAccountCircle} from "react-icons/md";
 
 export default function TopBar(){

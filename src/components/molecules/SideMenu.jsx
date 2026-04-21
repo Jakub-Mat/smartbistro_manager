@@ -1,5 +1,5 @@
-import LogoPic from '../../atoms/LogoPic.jsx';
-import RouteButton from "../../atoms/buttons/RouteButton.jsx";
+import LogoPic from '../atoms/LogoPic.jsx';
+import RouteButton from "../atoms/RouteButton.jsx";
 import { MdGridView, MdBarChart, MdAssignment} from "react-icons/md";
 import { LuPackage } from 'react-icons/lu';
 

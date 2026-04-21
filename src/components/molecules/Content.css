@@ -3,30 +3,39 @@
     grid-template-areas:
     "linechart orderTable"
     "stockTable orderTable";
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
-    /*max-width: 82vw; ještě si nejsem jist*/
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    grid-template-rows: auto 1fr;
+    box-sizing: border-box;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+#linechart,
+#stockTable,
+#orderTable {
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
 }
 
 #linechart{
     grid-area: linechart;
     text-align: center;
     border: #1A1F16 solid;
-    margin: 20px;
 }
-
 
 #stockTable{
     grid-area: stockTable;
     border: #1A1F16 solid;
     overflow-y: auto;
-    margin: 20px;
 }
 
 #orderTable{
     grid-area: orderTable;
     border: #1A1F16 dotted;
-    margin: 20px;
+    overflow-y: auto;
 }
 
 .contentTitle{

@@ -1,7 +1,7 @@
 [
   {
     "name": "Houska",
-    "pocet_ks": 120,
+    "pocet_ks": 30,
     "min_pocet": 40,
     "cena": 8.50
   },
@@ -25,7 +25,7 @@
   },
   {
     "name": "Sýr Cheddar (plátek)",
-    "pocet_ks": 200,
+    "pocet_ks": 45,
     "min_pocet": 50,
     "cena": 4.50
   },
@@ -43,7 +43,7 @@
   },
   {
     "name": "Rajče",
-    "pocet_ks": 45,
+    "pocet_ks": 15,
     "min_pocet": 15,
     "cena": 7.00
   },
