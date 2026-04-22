@@ -3,6 +3,7 @@
   padding: 0;
 }
 
+/*--------------Layout section------------*/
 #layout-grid {
   display: grid;
   grid-template-columns: 18vw 1fr;
@@ -16,6 +17,7 @@
   "sideMenu content";
 
 }
+
 #layout-grid #sideMenu {
   grid-area: sideMenu;
   border-right: #1A1F16 solid;
@@ -41,4 +43,15 @@
 #layout-grid #content {
   grid-area: content;
 
+}
+
+/*--------------Global components styling section------------*/
+
+.contentTitle{
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 1.1rem;
+  justify-content: center;
+  display: flex;
+  padding: 5px 5px 5px 5px;
 }

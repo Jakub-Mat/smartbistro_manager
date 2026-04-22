@@ -27,7 +27,7 @@ export default function StockTable({ ingredients, onPlusButtonClick }) {
         })
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{backgroundColor: "inherit"}}>
             <Table sx={{ minWidth: 650}} aria-label="simple table">
                 <TableHead>
                     <TableRow>

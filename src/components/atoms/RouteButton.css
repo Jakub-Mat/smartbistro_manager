@@ -23,6 +23,7 @@ button:hover{
     justify-content: center;
     height: auto;
     font-family: var(--mainFont), sans-serif;
+    font-size: 1.3rem;
 }
 
 #secIcon{

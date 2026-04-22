@@ -23,27 +23,30 @@
 #linechart{
     grid-area: linechart;
     text-align: center;
-    border: #1A1F16 solid;
+    border: #1A1F16 solid 2px;
+}
+
+#chartWrapper{
+    width:  100%;
+    height: 400px;
+    position: relative;
 }
 
 #stockTable{
     grid-area: stockTable;
-    border: #1A1F16 solid;
     overflow-y: auto;
+    background-color: transparent;
+    border: #1A1F16 solid 2px;
 }
 
 #orderTable{
     grid-area: orderTable;
-    border: #1A1F16 dotted;
     overflow-y: auto;
+    background-color: transparent;
+    border: #1A1F16 solid 2px;
 }
 
-.contentTitle{
-    color: var(--primary);
-    font-weight: bold;
-    font-size: 1.1rem;
-    text-align: center;
-}
+
 
 
 

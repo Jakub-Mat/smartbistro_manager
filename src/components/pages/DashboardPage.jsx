@@ -5,11 +5,12 @@ import OrderTable from '../atoms/OrderTable.jsx'
 import DialogSlider from '../atoms/DialogSlider.jsx'
 import { useState } from 'react'
 import ingredientData from '../../assets/suroviny.json'
+import ContentTitle from "../atoms/ContentTitle.jsx";
 const STORAGE_KEY = 'smartbistro_ingredients'
 
 export default function DashboardPage() {
 
-    //----------render ingredient data z localStorage nebo json file jestli je localStorage prázdný--------
+    //render ingredient data z localStorage nebo json file jestli je localStorage prázdný
     function loadIngredients() {
         const saved = localStorage.getItem(STORAGE_KEY)
         return saved ? JSON.parse(saved) : ingredientData
@@ -75,20 +76,12 @@ export default function DashboardPage() {
                 />
                 {/* Graf přehledů zisku */}
                 <div id="linechart">
-                    <span className="contentTitle">
-                        Přehled přijmů za rok 2024 a 2025
-                    </span>
-                    <div id="chartWrapper">
-                        <LineChart/>
-                    </div>
+                    <ContentTitle text={"Přehled přijmů za rok 2024 a 2025"}/>
+                    <LineChart/>
                 </div>
                 {/*Tabulka položek ve skladu s tlačítkem rychlého objednání*/}
                 <div id="stockTable">
-                    <div className="contentTitle">
-                        <span>
-                            Zboží ve skladu
-                         </span>
-                    </div>
+                    <ContentTitle text="Sklad surovin"/>
 
                     <div id="stockTableWrapper">
                         <StockTable
@@ -98,17 +91,11 @@ export default function DashboardPage() {
                     </div>
                 </div>
                 <div id="orderTable">
-                    <div className="contentTitle">
-                        <span>
-                            Objednávky za dnešní den
-                        </span>
-                    </div>
+                    <ContentTitle text="Aktuální objednávky"/>
                     <div id="orderTableWrapper">
                         <OrderTable onPlusButtonClick={undefined}/>
                     </div>
                 </div>
-
-
             </div>
         </>
     )
