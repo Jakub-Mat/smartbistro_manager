@@ -1,4 +1,4 @@
-#content{
+#dashboardContent{
     display: grid;
     grid-template-areas:
     "linechart orderTable"

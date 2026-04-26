@@ -1,4 +1,4 @@
-import './Content.css'
+import './DashboardPage.css'
 import LineChart from '../atoms/LineChart.jsx'
 import StockTable from '../atoms/StockTable.jsx'
 import OrderTable from '../atoms/OrderTable.jsx'
@@ -60,7 +60,7 @@ export default function DashboardPage() {
     //---------zobrazení obsahu dashboardu: graf, tabulka skladu a tabulka objednávek----------------
     return (
         <>
-            <div id="content">
+            <div id="dashboardContent">
                 <DialogSlider
                     open={isOrderDialogOpen}
                     onClose={handleCloseDialog}

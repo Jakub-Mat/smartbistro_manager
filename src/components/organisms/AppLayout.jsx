@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import SideMenu from '../molecules/SideMenu.jsx'
 import TopBar from '../molecules/TopBar.jsx'
-import '../pages/Content.css'
+import '../pages/DashboardPage.css'
 
 
 export default function AppLayout() {
