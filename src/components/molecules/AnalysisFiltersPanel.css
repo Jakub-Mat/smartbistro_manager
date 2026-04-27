@@ -1,0 +1,71 @@
+.analysisFiltersPanel {
+    border: 1px solid #1A1F16;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--bg);
+}
+
+.analysisFiltersPanel h3 {
+    color: var(--primary);
+    font-size: 1.05rem;
+}
+
+.filterBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filterLabel {
+    font-weight: 600;
+}
+
+.filterRangeRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.filterBlock label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.95rem;
+}
+
+.filterBlock select,
+.filterBlock input {
+    border: 1px solid #1A1F16;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+}
+
+.filterActions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.btnApply,
+.btnCancel {
+    border: 1px solid #1A1F16;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnApply {
+    background: var(--primary);
+    color: #FFFBFF;
+}
+
+.btnCancel {
+    background: #FFFBFF;
+    color: #1A1F16;
+}
+
