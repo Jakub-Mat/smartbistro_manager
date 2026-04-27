@@ -7,6 +7,10 @@ import MenuPage from "./components/pages/MenuPage.jsx";
 import StockManagementPage from "./components/pages/StockManagementPage.jsx";
 
 
+// TODO(storage-refactor):
+// 1) Přesunout localStorage keys do src/utils/storage.js
+// 2) Přidat safe JSON parse helper
+// 3) Nahradit přímé localStorage.getItem/setItem ve stránkách helper funkcemi
 
 function App() {
 

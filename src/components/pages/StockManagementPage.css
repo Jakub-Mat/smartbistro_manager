@@ -1,0 +1,97 @@
+#content.stockManagementContent {
+    display: block;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.stockPanel {
+    border: 1px solid var(--fontColor);
+    border-radius: 10px;
+    padding: 16px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.stockTitle {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: inline-block;
+}
+
+.stockSubtitle {
+    color: var(--fontColor);
+    display: block;
+    margin-top: 6px;
+    margin-bottom: 16px;
+}
+
+.stockFilterBar {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(170px, 1fr)) auto;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 16px;
+}
+
+.stockFilterField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stockFilterField label {
+    color: var(--fontColor);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.stockFilterField input,
+.stockFilterField select {
+    border: 1px solid var(--fontColor);
+    border-radius: 8px;
+    height: 34px;
+    padding: 0 10px;
+    font: inherit;
+    color: var(--fontColor);
+    background: var(--bg);
+}
+
+.stockFilterReset {
+    border: 1px solid var(--fontColor);
+    border-radius: 8px;
+    height: 34px;
+    width: fit-content;
+    margin: 0;
+    padding: 0 12px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font: inherit;
+    font-weight: 600;
+    color: var(--fontColor);
+    background: var(--primary);
+    cursor: pointer;
+}
+
+.stockFilterReset:hover {
+    filter: brightness(0.96);
+}
+
+.stockTableWrapper {
+    min-width: 0;
+}
+
+@media (max-width: 1000px) {
+    .stockFilterBar {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
