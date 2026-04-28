@@ -60,7 +60,6 @@ const LineChart = ({
     yFrom = 0,
     yTo,
     hiddenLine,
-    height = 260,
 }) => {
     const maxIndex = BASE_LABELS.length - 1;
     const safeFrom = clamp(Number.isFinite(xFrom) ? xFrom : 0, 0, maxIndex);
