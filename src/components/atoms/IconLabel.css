@@ -6,7 +6,7 @@
 
 #icon {
     color: var(--primary);
-    margin: auto;
+    margin: auto 10px auto auto;
     width: var(--btnSize);
     height: var(--btnSize);
 }

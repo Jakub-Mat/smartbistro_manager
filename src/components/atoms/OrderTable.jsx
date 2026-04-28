@@ -7,33 +7,12 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
 import { FaRegFilePdf as AddIcon} from "react-icons/fa6";
+import { initialOrders } from '../../utils/mockData.js'
+import { STORAGE_KEYS, readJson } from '../../utils/storage.js'
 
+export default function OrderTable({ onPlusButtonClick }) {
+    const orders = readJson(STORAGE_KEYS.orders, initialOrders)
 
-function createData(
-    order_id,
-    order_time,
-    pocet_ks,
-    cena,
-    PDF,
-) {
-    return { name: order_id, calories: order_time, fat: pocet_ks, carbs: cena, protein: PDF }
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Anything else', 356, 16.0, 49, 3.9),
-    createData('Something else', 356, 16.0, 49, 3.9),
-    createData('Another thing', 356, 16.0, 49, 3.9),
-    createData('Last thing', 356, 16.0, 49, 3.9),
-    createData('Last thingy', 356, 16.0, 49, 3.9),
-    createData('Last thingy2', 356, 16.0, 49, 3.9),
-]
-
-export default function StockTable({ onPlusButtonClick }) {
     return (
         <TableContainer component={Paper}  sx={{backgroundColor: "inherit"}}>
             <Table aria-label="simple table">
@@ -47,21 +26,31 @@ export default function StockTable({ onPlusButtonClick }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {orders.map((order) => (
                         <TableRow
-                            key={row.name}
+                            key={order.id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
-                                {row.name}
+                                {order.id}
                             </TableCell>
-                            <TableCell align="right">{row.calories}</TableCell>
-                            <TableCell align="right">{row.fat}</TableCell>
-                            <TableCell align="right">{row.carbs}</TableCell>
+                            <TableCell align="right">
+                                {new Date(order.timestamp).toLocaleString('cs-CZ',
+                                    {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    }
+                                )}
+                            </TableCell>
+                            <TableCell align="right">{order.quantity}</TableCell>
+                            <TableCell align="right">{order.totalPrice} Kč</TableCell>
                             <TableCell align="center">
                                 <IconButton
-                                    aria-label={`add ${row.name}`}
-                                    onClick={() => onPlusButtonClick(row.name)}
+                                    aria-label={`add ${order.id}`}
+                                    onClick={() => onPlusButtonClick?.(order.id)}
                                 >
                                     <AddIcon style={{color: "#1A1F16"}}/>
                                 </IconButton>
