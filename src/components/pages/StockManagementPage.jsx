@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import './StockManagementPage.css'
 import StockTable from '../atoms/StockTable.jsx'
-import ingredientData from '../../assets/suroviny.json'
-
-const STORAGE_KEY = 'smartbistro_ingredients'
-const FILTERS_STORAGE_KEY = 'smartbistro_stock_filters'
+import { readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
+import { initialIngredients } from '../../utils/mockData.js'
+import { getPriority } from '../../utils/storage.js'
 
 const DEFAULT_FILTERS = {
     query: '',
@@ -12,23 +11,17 @@ const DEFAULT_FILTERS = {
     sortBy: 'priority',
 }
 
+// TODO: Remove plus icons and functionality for adding stock and removing from stock
 export default function StockManagementPage() {
-
-    function loadIngredients() {
-        const saved = localStorage.getItem(STORAGE_KEY)
-        return saved ? JSON.parse(saved) : ingredientData
-    }
-
-    function loadFilters() {
-        const saved = localStorage.getItem(FILTERS_STORAGE_KEY)
-        return saved ? JSON.parse(saved) : DEFAULT_FILTERS
-    }
-
-    const [ingredients] = useState(loadIngredients)
-    const [filters, setFilters] = useState(loadFilters)
+    const [ingredients] = useState(() =>
+        readJson(STORAGE_KEYS.ingredients, initialIngredients)
+    )
+    const [filters, setFilters] = useState(() =>
+        readJson(STORAGE_KEYS.filters || 'smartbistro_stock_filters', DEFAULT_FILTERS)
+    )
 
     useEffect(() => {
-        localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters))
+        writeJson('smartbistro_stock_filters', filters)
     }, [filters])
 
     const handleFilterChange = (key, value) => {
@@ -42,11 +35,6 @@ export default function StockManagementPage() {
         setFilters(DEFAULT_FILTERS)
     }
 
-    const getPriority = (item) => {
-        if (item.pocet_ks < item.min_pocet) return 0
-        if (item.pocet_ks === item.min_pocet) return 1
-        return 2
-    }
 
     let filteredIngredients = [...ingredients]
 
@@ -56,15 +44,15 @@ export default function StockManagementPage() {
     }
 
     if (filters.stockState === 'belowMin') {
-        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.pocet_ks < ingredient.min_pocet)
+        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.qty < ingredient.min_qty)
     }
 
     if (filters.stockState === 'atMin') {
-        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.pocet_ks === ingredient.min_pocet)
+        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.qty === ingredient.min_qty)
     }
 
     if (filters.stockState === 'aboveMin') {
-        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.pocet_ks > ingredient.min_pocet)
+        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.qty > ingredient.min_qty)
     }
 
     if (filters.sortBy === 'nameAsc') {
@@ -72,19 +60,19 @@ export default function StockManagementPage() {
     }
 
     if (filters.sortBy === 'stockAsc') {
-        filteredIngredients.sort((a, b) => a.pocet_ks - b.pocet_ks)
+        filteredIngredients.sort((a, b) => a.qty - b.qty)
     }
 
     if (filters.sortBy === 'stockDesc') {
-        filteredIngredients.sort((a, b) => b.pocet_ks - a.pocet_ks)
+        filteredIngredients.sort((a, b) => b.qty - a.qty)
     }
 
     if (filters.sortBy === 'priceAsc') {
-        filteredIngredients.sort((a, b) => a.cena - b.cena)
+        filteredIngredients.sort((a, b) => a.price - b.price)
     }
 
     if (filters.sortBy === 'priceDesc') {
-        filteredIngredients.sort((a, b) => b.cena - a.cena)
+        filteredIngredients.sort((a, b) => b.price - a.price)
     }
 
     if (filters.sortBy === 'priority') {

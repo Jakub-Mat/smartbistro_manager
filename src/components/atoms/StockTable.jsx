@@ -10,21 +10,10 @@ import { MdAdd as AddIcon } from 'react-icons/md'
 
 export default function StockTable({ ingredients, onPlusButtonClick }) {
 
-    //vypočte prioritu pro řazení: 0 = červená, 1 = oranžová, 2 = ostatní
-    const getPriority = (item) => {
-        if (item.pocet_ks < item.min_pocet) return 0 // cervena
-        if (item.pocet_ks === item.min_pocet) return 1 // oranzova
-        return 2 // ostatni
-    }
-
     const rows = (ingredients ?? []).map((ingredient, index) => ({
       ...ingredient,
       originalIndex: index, // kvuli stabilnimu razeni
-    })).sort((a,b) => { // seřadí dle getPriority bud ingredient posune výš, níž nebo ponechá na místě, pokud jsou stejné priority, zachová původní pořadí
-            const priorityA = getPriority(a) - getPriority(b)
-            if (priorityA !== 0) return priorityA
-            return a.originalIndex - b.originalIndex
-        })
+    }))
 
     return (
         <TableContainer component={Paper} sx={{backgroundColor: "inherit"}}>
@@ -52,15 +41,15 @@ export default function StockTable({ ingredients, onPlusButtonClick }) {
                                 align="right"
                                 //obarvení počtu ks pro lepší přehlednost
                                 sx={{
-                                    color: row.pocet_ks < row.min_pocet ? 'var(--highlightRed)' :
-                                    row.pocet_ks === row.min_pocet ? 'var(--betterOrange)' : 'inherit',
-                                    fontWeight: row.pocet_ks <= row.min_pocet ? 700 : 400
+                                    color: row.qty < row.min_qty ? 'var(--highlightRed)' :
+                                    row.qty === row.min_qty ? 'var(--betterOrange)' : 'inherit',
+                                    fontWeight: row.qty <= row.min_qty ? 700 : 400
                             }}>
-                                {row.pocet_ks}
+                                {row.qty}
                             </TableCell>
 
-                            <TableCell align="right">{row.min_pocet}</TableCell>
-                            <TableCell align="right">{row.cena}</TableCell>
+                            <TableCell align="right">{row.min_qty}</TableCell>
+                            <TableCell align="right">{row.price}</TableCell>
                             <TableCell align="center" sx={{ width: '50px'}}>
                                 <IconButton
                                     aria-label={`add ${row.name}`}

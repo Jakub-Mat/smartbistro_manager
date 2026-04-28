@@ -2,25 +2,17 @@ import './MenuPage.css'
 import { useState } from 'react'
 import { Card, CardContent } from '@mui/material'
 import ProductDialog from '../atoms/ProductDialog'
-import suroviny from '../../assets/suroviny.json'
+import { readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
+import { initialIngredients, initialProducts } from '../../utils/mockData.js'
 
-const menuProducts = [
-  {
-    id: 1,
-    name: 'Chessburger',
-    ingredients: ['Houska', 'Kečup', 'Kyselá okurka', 'Hovězí maso (porce)','Hořčice'],
-    price: 150,
-  },
-  {
-    id: 2,
-    name: 'Hamburger',
-    ingredients: ['Houska', 'Kečup', 'Kyselá okurka', 'Hovězí maso (porce)'],
-    price: 120,
-  }
-]
-
+// TODO: make working disable/enable button
 export default function MenuPage() {
-  const [products, setProducts] = useState(menuProducts)
+  const [ingredients] = useState(() =>
+    readJson(STORAGE_KEYS.ingredients, initialIngredients)
+  )
+  const [products, setProducts] = useState(() =>
+    readJson(STORAGE_KEYS.products, initialProducts)
+  )
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   // Otevře dialog pro vytvoření nového produktu.
@@ -33,9 +25,15 @@ export default function MenuPage() {
     setIsDialogOpen(false)
   }
 
-  // Přidá nově vytvořený produkt do seznamu.
+  // Přidá nově vytvořený produkt do seznamu a uloží do storage
   const handleCreateProduct = (product) => {
-    setProducts((previous) => [...previous, product])
+    const normalizedProduct = {
+      ...product,
+      price: Math.round(product.price),
+    }
+    const newProducts = [...products, normalizedProduct]
+    setProducts(newProducts)
+    writeJson(STORAGE_KEYS.products, newProducts)
   }
 
   return (
@@ -77,7 +75,7 @@ export default function MenuPage() {
       <ProductDialog
         open={isDialogOpen}
         onClose={closeDialog}
-        ingredients={suroviny}
+        ingredients={ingredients}
         onCreateProduct={handleCreateProduct}
       />
     </div>

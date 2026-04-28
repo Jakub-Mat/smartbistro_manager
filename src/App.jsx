@@ -1,18 +1,19 @@
 import './App.css'
-import {Navigate, Route, Routes} from "react-router-dom";
+import { useEffect } from 'react'
+import { Navigate, Route, Routes } from "react-router-dom";
+import { seedLocalStorage } from './utils/storage.js'
 import AppLayout from "./components/organisms/AppLayout.jsx";
 import DashboardPage from "./components/pages/DashboardPage.jsx";
 import AnalysisPage from "./components/pages/AnalysisPage.jsx";
 import MenuPage from "./components/pages/MenuPage.jsx";
 import StockManagementPage from "./components/pages/StockManagementPage.jsx";
 
-
-// TODO(storage-refactor):
-// 1) Přesunout localStorage keys do src/utils/storage.js
-// 2) Přidat safe JSON parse helper
-// 3) Nahradit přímé localStorage.getItem/setItem ve stránkách helper funkcemi
-
+// TODO: Add window of interpretion of customer ordering
 function App() {
+  // Seed localStorage s mock daty při prvním spuštění aplikace
+  useEffect(() => {
+    seedLocalStorage()
+  }, [])
 
   return (
     <Routes>

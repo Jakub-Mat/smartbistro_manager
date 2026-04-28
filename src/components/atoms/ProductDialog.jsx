@@ -105,7 +105,7 @@ export default function ProductDialog({
     onCreateProduct({
       id: Date.now(),
       name: name.trim(),
-      price: numericPrice,
+      price: Math.round(numericPrice),
       ingredients: selectedIngredients.map((ingredient) => ingredient.name),
     })
 
@@ -139,7 +139,7 @@ export default function ProductDialog({
             onChange={(event) => setPrice(event.target.value)}
             required
             fullWidth
-            slotProps={{ htmlInput: { min: 0 } }}
+            slotProps={{ htmlInput: { min: 0, step: 1, inputMode: 'numeric' } }}
           />
           <div className="product-dialog__columns">
               <section
@@ -160,7 +160,7 @@ export default function ProductDialog({
                                   {ingredient.name}
                               </div>
                               <div className="product-dialog__ingredient-meta">
-                                  {ingredient.pocet_ks} ks · {ingredient.cena} Kč
+                                    {ingredient.qty} ks · {ingredient.price} Kč
                               </div>
                           </div>
                       ))}
@@ -194,7 +194,7 @@ export default function ProductDialog({
                                       {ingredient.name}
                                   </div>
                                   <div className="product-dialog__ingredient-meta">
-                                      {ingredient.pocet_ks} ks · {ingredient.cena} Kč
+                                      {ingredient.qty} ks · {ingredient.price} Kč
                                   </div>
                               </div>
                           ))
