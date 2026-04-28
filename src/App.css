@@ -21,6 +21,10 @@
 #layout-grid #sideMenu {
   grid-area: sideMenu;
   border-right: #1A1F16 solid;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px 20px;
 }
 
 #layout-grid #sideMenu a {
@@ -28,10 +32,9 @@
 }
 
 #layout-grid #sideMenu a.active {
-  color: white;
-  text-decoration: #1A1F16 underline;
   border-radius: 12px;
   display: block;
+  border: var(--primary) 2px solid;
 }
 
 #layout-grid #topBar {

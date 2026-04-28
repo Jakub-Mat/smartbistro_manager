@@ -11,7 +11,7 @@ export default function SideMenu(){
             <div id="sideMenu">
                 <LogoPic/>
                 <NavLink to={"/dashboard"} className={({isActive}) => isActive ? "active" : ""}>
-                    <RouteButton label="Dashboard" icon={MdGridView(undefined)}/>
+                    <RouteButton label="Přehled" icon={MdGridView(undefined)}/>
                 </NavLink>
                 <NavLink to={"/analysis"} className={({isActive}) => isActive ? "active" : ""}>
                     <RouteButton label="Analýza" icon={MdAssignment(undefined)}/>
