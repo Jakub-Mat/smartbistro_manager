@@ -83,7 +83,10 @@ export default function DashboardPage() {
                 {/* Graf přehledů zisku */}
                 <div id="linechart">
                     <ContentTitle text={"Přehled přijmů za rok 2024 a 2025"}/>
-                    <LineChart/>
+                    <div id="chartWrapper">
+                        <LineChart/>
+                    </div>
+
                 </div>
                 {/*Tabulka položek ve skladu s tlačítkem rychlého objednání*/}
                 <div id="stockTable">
