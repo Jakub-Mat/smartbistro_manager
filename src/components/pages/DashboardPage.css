@@ -23,7 +23,8 @@
 #linechart{
     grid-area: linechart;
     text-align: center;
-    border: #1A1F16 solid 2px;
+    border: var(--componentBorder);
+    border-radius: var(--componentBorderRadius);
     display: flex;
     flex-direction: column;
 }
@@ -39,14 +40,16 @@
     grid-area: stockTable;
     overflow-y: auto;
     background-color: transparent;
-    border: #1A1F16 solid 2px;
+    border: var(--componentBorder);
+    border-radius: var(--componentBorderRadius);
 }
 
 #orderTable{
     grid-area: orderTable;
     overflow-y: auto;
     background-color: transparent;
-    border: #1A1F16 solid 2px;
+    border: var(--componentBorder);
+    border-radius: var(--componentBorderRadius);
 }
 
 

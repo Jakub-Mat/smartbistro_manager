@@ -36,7 +36,6 @@ export function seedLocalStorage() {
 }
 
 // ŘAZENÍ PRO TABULKU StockTable
-
 //vypočte prioritu pro řazení: 0 = červená, 1 = oranžová, 2 = ostatní
 export const getPriority = (item) => {
   if (item.qty < item.min_qty) return 0

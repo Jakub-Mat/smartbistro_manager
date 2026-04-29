@@ -4,6 +4,7 @@ import AnalysisFiltersPanel from '../molecules/AnalysisFiltersPanel.jsx'
 import './AnalysisPage.css'
 import { readJson, STORAGE_KEYS } from '../../utils/storage.js'
 import { initialOrders } from '../../utils/mockData.js'
+import ContentTitle from "../atoms/ContentTitle.jsx";
 
 // TODO: Dodělat a zobrazit aktuální finanční stav => SUM ze všech cen z orders
 // TODO: Dodělat tabulku s orders
@@ -72,15 +73,16 @@ export default function AnalysisPage() {
     return (
         <div id="content" className="analysisContent">
             <section className="analysisChartSection">
-                <span className="analysisTitle">Přehled přijmů za rok 2024 a 2025</span>
-                <LineChart
-                    xFrom={appliedFilters.xFrom}
-                    xTo={appliedFilters.xTo}
-                    yFrom={appliedFilters.yFrom}
-                    yTo={appliedFilters.yTo}
-                    hiddenLine={appliedFilters.hiddenLine}
-                    height={460}
-                />
+                <ContentTitle text={"Přehled přijmů za rok 2024 a 2025"}/>
+                <div className="analysisChartContainer">
+                    <LineChart
+                        xFrom={appliedFilters.xFrom}
+                        xTo={appliedFilters.xTo}
+                        yFrom={appliedFilters.yFrom}
+                        yTo={appliedFilters.yTo}
+                        hiddenLine={appliedFilters.hiddenLine}
+                    />
+                </div>
             </section>
 
             <AnalysisFiltersPanel

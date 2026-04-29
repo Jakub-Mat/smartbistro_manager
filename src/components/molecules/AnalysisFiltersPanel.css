@@ -1,6 +1,6 @@
 .analysisFiltersPanel {
-    border: 1px solid #1A1F16;
-    border-radius: 10px;
+    border: var(--componentBorder);
+    border-radius: var(--componentBorderRadius);
     padding: 16px;
     display: flex;
     flex-direction: column;
@@ -39,9 +39,11 @@
 .filterBlock select,
 .filterBlock input {
     border: 1px solid #1A1F16;
-    border-radius: 8px;
+    border-radius: var(--componentBorderRadius);
     padding: 8px 10px;
     font: inherit;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .filterActions {
@@ -53,7 +55,7 @@
 .btnApply,
 .btnCancel {
     border: 1px solid #1A1F16;
-    border-radius: 8px;
+    border-radius: var(--componentBorderRadius);
     padding: 8px 14px;
     font-weight: 600;
     cursor: pointer;
