@@ -25,7 +25,10 @@ export default function TopBar(){
                         icon={MdAccountCircle(undefined)}
                         id="account"
                         onclick={() => handleProfileClick()}/>
-                    <ProfileModal isOpen={isProfileOpen} />
+                    <ProfileModal
+                        isOpen={isProfileOpen}
+                        onClose={() => setIsProfileOpen(false)}
+                    />
                 </div>
 
             </div>

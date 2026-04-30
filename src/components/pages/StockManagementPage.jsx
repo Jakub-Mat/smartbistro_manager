@@ -4,6 +4,7 @@ import StockTable from '../atoms/StockTable.jsx'
 import { readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
 import { initialIngredients } from '../../utils/mockData.js'
 import { getPriority } from '../../utils/storage.js'
+import ContentTitle from "../atoms/ContentTitle.jsx";
 
 const DEFAULT_FILTERS = {
     query: '',
@@ -82,7 +83,7 @@ export default function StockManagementPage() {
     return (
         <div id="content" className="stockManagementContent">
             <section className="stockPanel">
-                <span className="stockTitle">Správa skladu</span>
+                <ContentTitle text="Správa skladu" />
                 <span className="stockSubtitle">Celkem položek: {filteredIngredients.length}</span>
 
                 <div className="stockFilterBar">

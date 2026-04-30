@@ -5,7 +5,9 @@ import ProductDialog from '../atoms/ProductDialog'
 import { readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
 import { initialIngredients, initialProducts } from '../../utils/mockData.js'
 
-// TODO: make working disable/enable button
+// TODO: Zprovoznit enable disable button
+// TODO: Předělat a sjednotit ProductCard a ProductDialog pro KioskPage a MenuPage, aby se předešlo duplikaci kódu a zjednodušilo se přidávání nových funkcí (např. editace produktu).
+
 export default function MenuPage() {
   const [ingredients] = useState(() =>
     readJson(STORAGE_KEYS.ingredients, initialIngredients)

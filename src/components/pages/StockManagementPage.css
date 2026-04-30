@@ -10,23 +10,15 @@
 .stockPanel {
     border: 1px solid var(--fontColor);
     border-radius: 10px;
-    padding: 16px;
+    padding: 15px;
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
 }
 
-.stockTitle {
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 1.1rem;
-    display: inline-block;
-}
-
 .stockSubtitle {
     color: var(--fontColor);
     display: block;
-    margin-top: 6px;
     margin-bottom: 16px;
 }
 

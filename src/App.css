@@ -31,12 +31,6 @@
   text-decoration: none;
 }
 
-#layout-grid #sideMenu a.active {
-  border-radius: 12px;
-  display: block;
-  border: var(--primary) 2px solid;
-}
-
 #layout-grid #topBar {
   grid-area: topbar;
   background-color: var(--bg);

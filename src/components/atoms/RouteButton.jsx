@@ -2,7 +2,7 @@ import './RouteButton.css'
 
 export default function RouteButton({label,icon}) {
     return (
-        <button id="routeButton">
+        <button className="routeButton">
             <span id="secIcon">
                 {icon}
             </span>

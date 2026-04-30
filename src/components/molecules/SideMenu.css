@@ -1,0 +1,11 @@
+#sideMenu #navLink{
+    border-radius: 10px;
+}
+
+#sideMenu .active {
+    border: var(--primary) 2px solid;
+}
+
+#sideMenu .inactive {
+    border: white 2px solid;
+}

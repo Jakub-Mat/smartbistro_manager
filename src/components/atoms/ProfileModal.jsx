@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import './ProfileModal.css'
 
-export default function ProfileModal({ isOpen }) {
+export default function ProfileModal({ isOpen, onClose }) {
+    const location = useLocation()
+    const navigate = useNavigate()
+    const modalContentRef = useRef(null)
+    const isKioskRoute = location.pathname.startsWith('/kiosk')
+    const switchButtonLabel = isKioskRoute ? 'Přepnout na manažera' : 'Přepnout na kiosk'
+    const switchTargetRoute = isKioskRoute ? '/dashboard' : '/kiosk'
     const [userName, setUserName] = useState('jakubm@smartbistro.cz')
     const [password, setPassword] = useState('user1234')
     const [isEmailEditing, setIsEmailEditing] = useState(false)
@@ -16,10 +23,23 @@ export default function ProfileModal({ isOpen }) {
         setIsPasswordEditing((prev) => !prev)
     }
 
+    useEffect(() => {
+        if (!isOpen) return
+
+        const handleOutsideClick = (event) => {
+            if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
+                onClose()
+            }
+        }
+
+        document.addEventListener('mousedown', handleOutsideClick)
+        return () => document.removeEventListener('mousedown', handleOutsideClick)
+    }, [isOpen, onClose])
+
     if (!isOpen) return null;
     return (
         <div className="profileModalOverlay">
-            <div className="profileModalContent" onClick={(e) => e.stopPropagation()}>
+            <div ref={modalContentRef} className="profileModalContent" onClick={(e) => e.stopPropagation()}>
                 <div className="profileModalHeader">
                     <h2>Správa profilu</h2>
                 </div>
@@ -66,7 +86,15 @@ export default function ProfileModal({ isOpen }) {
                 </div>
 
                 <div className="profileModalFooter">
-                    <button className="buttonKiosk">Přepnout na kiosk</button>
+                    <button
+                        className="buttonKiosk"
+                        onClick={() => {
+                            onClose()
+                            navigate(switchTargetRoute)
+                        }}
+                    >
+                        {switchButtonLabel}
+                    </button>
                     <button className="buttonLogout">Odhlášení</button>
                 </div>
             </div>

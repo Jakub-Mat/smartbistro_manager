@@ -1,4 +1,4 @@
-#routeButton {
+.routeButton {
     color: var(--primary);
     background-color: transparent;
     font-size: 1.2rem;
