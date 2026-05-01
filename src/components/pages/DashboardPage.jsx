@@ -38,10 +38,6 @@ export default function DashboardPage() {
         setIsOrderDialogOpen(true)
     }
 
-    const maxQty = selectedIngredient
-        ? Math.max(selectedIngredient.min_qty * 2 - selectedIngredient.qty, 0)
-        : 0
-
     const handleCloseDialog = () => {
         setIsOrderDialogOpen(false)
         setSelectedIngredient(null)
@@ -76,7 +72,7 @@ export default function DashboardPage() {
                     value={orderQty}
                     onChange={(_, newValue) => setOrderQty(typeof newValue === 'number' ? newValue : 0)}
                     min={0}
-                    max={maxQty}
+                    max={100}
                     confirmText="Potvrdit objednávku"
                     cancelText="Zrušit"
                 />
