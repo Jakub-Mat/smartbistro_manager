@@ -95,7 +95,7 @@ export default function KioskPage() {
             <KioskProductCard
               key={product.id}
               product={product}
-              onAdd={handleAddToCart}
+              onClick={handleAddToCart}
             />
           ))}
         </div>

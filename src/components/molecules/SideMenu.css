@@ -6,6 +6,10 @@
     border: var(--primary) 2px solid;
 }
 
+#sideMenu .active #secName{
+    font-weight: bold;
+}
+
 #sideMenu .inactive {
     border: white 2px solid;
 }

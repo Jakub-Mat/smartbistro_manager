@@ -1,42 +1,18 @@
-.menu-page#menuContent {
+#content {
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
-.menu-page__grid {
+.menuPageLayout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 50px;
+  height: 100%;
   align-items: stretch;
-  padding: 20px;
-}
-
-.product-card {
-    background: var(--bg);
-    border: 2px solid var(--primary);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px;
-    min-height: 200px;
-}
-
-
-.product-card__body {
-  display: grid;
-  grid-template-rows: auto 60px auto auto;
-  row-gap: 10px;
-  justify-items: center;
-  align-items: center;
-  text-align: center;
-  max-width: 100%;
-  padding: 0 !important;
-}
-
-.product-card__name{
-  font-size: 1.4rem;
+  overflow-y: scroll;
 }
 
 .product-card__disable-button {
@@ -55,23 +31,33 @@
   min-height: 50px;
 }
 
-.product-card--add {
+.productCardAdd {
   border: 2px dashed var(--primary);
   background: var(--bg);
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  display: flex;
+  transition: all 0.2s ease;
 }
 
-.product-card__add-icon {
-  width: 84px;
-  height: 84px;
-  border: 3px solid var(--fontColor);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  line-height: 1;
-  color: var(--fontColor);
+.productCardAddIcon {
+    background-color: #4CAF50;
+    border: 2px dashed var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menuPageProduct button{
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 0;
+  margin: 0;
+  width: 100px;
 }

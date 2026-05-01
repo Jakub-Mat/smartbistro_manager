@@ -67,3 +67,9 @@
   font-size: 1.1rem;
   margin: 0;
 }
+
+#kiosk-content.kiosk-product-card.disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
