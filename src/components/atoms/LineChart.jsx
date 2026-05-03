@@ -10,6 +10,7 @@ import {
     Legend,
     Filler
 } from 'chart.js';
+import { initialOrders } from '../../utils/mockData';
 
 // Registrace prvků potřebných pro spojnicový graf
 ChartJS.register(
@@ -23,54 +24,74 @@ ChartJS.register(
     Filler
 );
 
-const BASE_LABELS = ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec'];
+const MONTH_LABELS = ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'];
 
-const BASE_DATASETS = [
-    {
-        id: 'currentYear',
-        label: 'Prodej za aktuální rok',
-        data: [4_300, 10_800, 15_000, 19_500, 20_100, 24_500, 40_000],
-        fill: false,
-        borderColor: '#4F9D69',
-        backgroundColor: '#4F9D69',
-        tension: 0.3,
-        pointRadius: 4,
-        pointHoverRadius: 8,
-    },
-    {
-        id: 'previousYear',
-        label: 'Prodej za minulý rok',
-        data: [5_000, 10_000, 14_000, 16_000, 18_000, 20_000, 23_000],
-        fill: false,
-        borderColor: '#EEE82C',
-        backgroundColor: '#EEE82C',
-        tension: 0.3,
-        pointRadius: 4,
-        pointHoverRadius: 8,
-    }
-];
+// Sčítání totalPrice za jednotlivé měsíce pro konkrétní rok (UTC)
+const getMonthlyTotals = (orders, year) => {
+    const totals = new Array(12).fill(0);
+    orders.forEach((o) => {
+        if (!o || !o.timestamp) return;
+        const d = new Date(o.timestamp);
+        if (Number.isNaN(d)) return;
+        const y = d.getUTCFullYear();
+        const m = d.getUTCMonth(); // 0..11
+        if (y === year) {
+            const price = Number.isFinite(o.totalPrice) ? o.totalPrice : 0;
+            totals[m] += price;
+        }
+    });
+    return totals;
+};
 
-export const LINE_CHART_LABELS = BASE_LABELS;
+const DATA_2025 = getMonthlyTotals(initialOrders, 2025);
+const DATA_2026 = getMonthlyTotals(initialOrders, 2026);
+
+export const LINE_CHART_LABELS = MONTH_LABELS;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 const LineChart = ({
     xFrom = 0,
-    xTo = BASE_LABELS.length - 1,
+    xTo = MONTH_LABELS.length - 1,
     yFrom = 0,
     yTo,
     hiddenLine,
 }) => {
-    const maxIndex = BASE_LABELS.length - 1;
+    const maxIndex = MONTH_LABELS.length - 1;
     const safeFrom = clamp(Number.isFinite(xFrom) ? xFrom : 0, 0, maxIndex);
     const safeTo = clamp(Number.isFinite(xTo) ? xTo : maxIndex, safeFrom, maxIndex);
-    const visibleLabels = BASE_LABELS.slice(safeFrom, safeTo + 1);
+    const visibleLabels = MONTH_LABELS.slice(safeFrom, safeTo + 1);
 
-    const visibleDatasets = BASE_DATASETS
+    const ALL_DATASETS = [
+        {
+            id: 'year2026',
+            label: 'Prodej 2026',
+            data: DATA_2026,
+            fill: false,
+            borderColor: '#4F9D69',
+            backgroundColor: '#4F9D69',
+            tension: 0.3,
+            pointRadius: 4,
+            pointHoverRadius: 8,
+        },
+        {
+            id: 'year2025',
+            label: 'Prodej 2025',
+            data: DATA_2025,
+            fill: false,
+            borderColor: '#EEE82C',
+            backgroundColor: '#EEE82C',
+            tension: 0.3,
+            pointRadius: 4,
+            pointHoverRadius: 8,
+        },
+    ];
+
+    const visibleDatasets = ALL_DATASETS
         .filter((dataset) => dataset.id !== hiddenLine)
         .map((dataset) => ({
             ...dataset,
-            data: dataset.data.slice(safeFrom, safeTo + 1),
+            data: (dataset.data || []).slice(safeFrom, safeTo + 1),
         }));
 
     const data = {

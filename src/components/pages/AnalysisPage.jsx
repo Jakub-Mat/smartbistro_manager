@@ -2,8 +2,6 @@ import { useState } from 'react'
 import LineChart, { LINE_CHART_LABELS } from '../atoms/LineChart.jsx'
 import AnalysisFiltersPanel from '../molecules/AnalysisFiltersPanel.jsx'
 import './AnalysisPage.css'
-import { readJson, STORAGE_KEYS } from '../../utils/storage.js'
-import { initialOrders } from '../../utils/mockData.js'
 import ContentTitle from "../atoms/ContentTitle.jsx";
 
 // TODO: Dodělat a zobrazit aktuální finanční stav => SUM ze všech cen z orders
@@ -13,15 +11,12 @@ const DEFAULT_FILTERS = {
     xFrom: 0,
     xTo: LINE_CHART_LABELS.length - 1,
     yFrom: 0,
-    yTo: 45_000,
+    yTo: 70_000,
     hiddenLine: '',
 }
 
 export default function AnalysisPage() {
-    //ignore this variable in ESlint for now
-    const [orders] = useState(() =>
-        readJson(STORAGE_KEYS.orders, initialOrders)
-    )
+
     const [appliedFilters, setAppliedFilters] = useState(DEFAULT_FILTERS)
     const [draftFilters, setDraftFilters] = useState(DEFAULT_FILTERS)
 
