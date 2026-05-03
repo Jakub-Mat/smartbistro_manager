@@ -8,11 +8,11 @@ import ContentTitle from "../atoms/ContentTitle.jsx"
 import { readJson, writeJson, STORAGE_KEYS, getPriority } from '../../utils/storage.js'
 import { initialIngredients } from '../../utils/mockData.js'
 
+// TODO: Add orders from kiosk to be removed from stockTable one of  essential things in app that must be add
+
 export default function DashboardPage() {
 
     // Zkopírování z StockManagement
-
-
     // Načti ingredience z localStorage
     const [ingredients, setIngredients] = useState(() =>
         readJson(STORAGE_KEYS.ingredients, initialIngredients)
