@@ -1,4 +1,4 @@
-.kiosk-cart {
+.kioskCart {
   border: 3px solid #333;
   border-radius: 8px;
   padding: 20px;
@@ -10,13 +10,13 @@
   min-width: 300px;
 }
 
-.kiosk-cart h2 {
+.kioskCart h2 {
   margin: 0;
   font-size: 1.3rem;
   color: #333;
 }
 
-.cart-items {
+.cartItems {
   flex: 1;
   overflow-y: auto;
   display: flex;
@@ -24,14 +24,14 @@
   gap: 12px;
 }
 
-.empty-message {
+.emptyMessage {
   text-align: center;
   color: #999;
   margin: 20px 0;
   font-style: italic;
 }
 
-.cart-item {
+.cartItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,27 +41,27 @@
   border: 1px solid #eee;
 }
 
-.item-info {
+.itemInfo {
   display: flex;
   flex-direction: column;
   gap: 6px;
   flex: 1;
 }
 
-.item-name {
+.itemName {
   font-weight: 600;
   color: #333;
   font-size: 0.95rem;
 }
 
-.item-controls {
+.itemControls {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.btn-decrease,
-.btn-increase {
+.btnDecrease,
+.btnIncrease {
   background-color: #333;
   color: white;
   border: none;
@@ -76,26 +76,26 @@
   transition: all 0.2s ease;
 }
 
-.btn-decrease:hover,
-.btn-increase:hover {
+.btnDecrease:hover,
+.btnIncrease:hover {
   background-color: #555;
 }
 
-.item-quantity {
+.itemQuantity {
   min-width: 35px;
   text-align: center;
   font-weight: 600;
   color: #333;
 }
 
-.item-price {
+.itemPrice {
   font-weight: 700;
   color: #333;
   min-width: 60px;
   text-align: right;
 }
 
-.cart-total {
+.cartTotal {
   border-top: 2px solid #eee;
   padding-top: 12px;
   text-align: right;
@@ -103,13 +103,13 @@
   color: #333;
 }
 
-.cart-actions {
+.cartActions {
   display: flex;
   gap: 10px;
   margin-top: auto;
 }
 
-.btn-cancel {
+.kioskCartCancelButton {
   flex: 1;
   padding: 12px;
   background-color: #f44336;
@@ -122,11 +122,11 @@
   transition: all 0.2s ease;
 }
 
-.btn-cancel:hover {
+.kioskCartCancelButton:hover {
   background-color: #da190b;
 }
 
-.btn-submit {
+.btnSubmit {
   flex: 1;
   padding: 12px;
   background-color: #4CAF50;
@@ -139,7 +139,7 @@
   transition: all 0.2s ease;
 }
 
-.btn-submit:hover {
+.btnSubmit:hover {
   background-color: #45a049;
 }
 

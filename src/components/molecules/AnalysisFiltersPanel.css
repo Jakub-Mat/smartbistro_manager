@@ -47,13 +47,13 @@
 }
 
 .filterActions {
-    display: flex;
     gap: 10px;
     margin-top: 4px;
+    display: inline-flex;
 }
 
-.btnApply,
-.btnCancel {
+.analysisApplyButton,
+.analysisCancelButton {
     border: 1px solid #1A1F16;
     border-radius: var(--componentBorderRadius);
     padding: 8px 14px;
@@ -61,12 +61,13 @@
     cursor: pointer;
 }
 
-.btnApply {
+.analysisApplyButton {
     background: var(--primary);
     color: #FFFBFF;
+    flex: 1;
 }
 
-.btnCancel {
+.analysisCancelButton {
     background: #FFFBFF;
     color: #1A1F16;
 }

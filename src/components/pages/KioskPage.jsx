@@ -89,8 +89,8 @@ export default function KioskPage() {
   }
 
   return (
-      <div id="kiosk-content">
-        <div className="products-grid">
+      <div id="kioskContent">
+        <div className="productsGrid">
           {products.map(product => (
             <KioskProductCard
               key={product.id}
@@ -108,8 +108,8 @@ export default function KioskPage() {
         />
 
           {orderSubmitted && (
-              <div className="order-confirmation">
-                  <div className="confirmation-content">
+              <div className="orderConfirmation">
+                  <div className="confirmationContent">
                       <h2>✓ Objednávka odeslána!</h2>
                       <p>Děkujeme za vaši objednávku.</p>
                   </div>

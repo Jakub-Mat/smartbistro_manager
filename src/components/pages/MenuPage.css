@@ -7,28 +7,11 @@
 
 .menuPageLayout {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 50px;
   height: 100%;
   align-items: stretch;
-  overflow-y: scroll;
-}
-
-.product-card__disable-button {
-  border: 2px solid var(--fontColor);
-  border-radius: 10px;
-  background: var(--secondary);
-  color: var(--fontColor);
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1;
-  cursor: pointer;
-  margin-bottom: 5px;
-  justify-content: center;
-  max-width: 250px;
-  min-width: 100px;
-  min-height: 50px;
+  overflow-y: auto;
 }
 
 .productCardAdd {
@@ -60,4 +43,8 @@
   padding: 0;
   margin: 0;
   width: 100px;
+}
+
+.menuPageLayout .productCard.enable .btnAdd {
+    background-color: var(--highlightRed);
 }

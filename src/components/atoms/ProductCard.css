@@ -1,4 +1,4 @@
-.kiosk-product-card {
+.productCard {
   border: 2px solid #333;
   border-radius: 8px;
   padding: 15px;
@@ -10,25 +10,25 @@
 }
 
 
-.kiosk-product-card h3 {
+.productCard h3 {
   margin: 0;
   font-size: 1.1rem;
   color: #333;
 }
 
-.kiosk-product-card .ingredients {
+.productCard .ingredients {
   margin: 0;
   font-size: 0.85rem;
   color: #666;
   flex-grow: 1;
 }
 
-.kiosk-product-card .ingredients strong {
+.productCard .ingredients strong {
   display: block;
   margin-bottom: 4px;
 }
 
-.card-footer {
+.cardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,13 +37,13 @@
   border-top: 1px solid #eee;
 }
 
-.card-footer .price {
+.cardFooter .price {
   font-size: 1.2rem;
   font-weight: bold;
   color: #333;
 }
 
-.btn-add {
+.btnAdd {
   background-color: #4CAF50;
   color: white;
   border: none;
@@ -58,7 +58,7 @@
   transition: all 0.2s ease;
 }
 
-.btn-add:hover {
+.btnAdd:hover {
   background-color: #45a049;
   transform: scale(1.1);
 }
