@@ -6,12 +6,74 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import { FaRegFilePdf as AddIcon} from "react-icons/fa6";
 import { initialOrders } from '../../utils/mockData.js'
 import { STORAGE_KEYS, readJson } from '../../utils/storage.js'
 
-export default function OrderTable({ onPlusButtonClick }) {
+export default function OrderTable() {
     const orders = readJson(STORAGE_KEYS.orders, initialOrders)
+
+
+    const loadUnicodeFont = async (doc) => {
+        const response = await fetch('/fonts/arial.ttf')
+        if (!response.ok) {
+            throw new Error('Nepodařilo se načíst font pro PDF')
+        }
+
+        const buffer = await response.arrayBuffer()
+
+        let binary = ''
+        const bytes = new Uint8Array(buffer)
+        const chunkSize = 0x8000
+
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+            binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+        }
+
+        const base64 = btoa(binary)
+        doc.addFileToVFS('Arial.ttf', base64)
+        doc.addFont('Arial.ttf', 'ArialUnicode', 'normal')
+        doc.setFont('ArialUnicode')
+    }
+
+    const handlePdfClick = async (order) => {
+        const doc = new jsPDF()
+    
+        await loadUnicodeFont(doc)
+
+        doc.setFontSize(16)
+        doc.text(`Objednávka #${order.id}`, 14, 16)
+    
+        doc.setFontSize(11)
+        doc.text(`Datum: ${new Date(order.timestamp).toLocaleString('cs-CZ')}`, 14, 26)
+        doc.text(`Počet ks: ${order.quantity}`, 14, 33)
+        doc.text(`Cena: ${order.totalPrice} Kč`, 14, 40)
+    
+        autoTable(doc, {
+            startY: 50,
+            head: [['Položka', 'Hodnota']],
+                styles: {
+                    font: 'ArialUnicode',
+                    fontStyle: 'normal',
+                },
+                headStyles: {
+                    font: 'ArialUnicode',
+                    fontStyle: 'normal',
+                },
+            body: [
+            ['ID objednávky', String(order.id)],
+            ['Produkty', (order.products ?? []).join(', ')],
+            ['Počet ks', String(order.quantity)],
+            ['Celková cena', `${order.totalPrice} Kč`],
+            ],
+        })
+    
+        const pdfBlob = doc.output('blob')
+        const url = URL.createObjectURL(pdfBlob)
+        window.open(url, '_blank', 'noopener,noreferrer')
+    }
 
     return (
         <TableContainer component={Paper}  sx={{backgroundColor: "inherit"}}>
@@ -50,7 +112,7 @@ export default function OrderTable({ onPlusButtonClick }) {
                             <TableCell align="center">
                                 <IconButton
                                     aria-label={`add ${order.id}`}
-                                    onClick={() => onPlusButtonClick?.(order.id)}
+                                    onClick={() => handlePdfClick(order)}
                                 >
                                     <AddIcon style={{color: "#1A1F16"}}/>
                                 </IconButton>

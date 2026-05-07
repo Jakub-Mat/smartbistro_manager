@@ -87,6 +87,7 @@ SmartBistro Manager
 - **MUI (Material UI) + MUI X** — komponenty (Data Grid, Tree View)
 - **Atomic design struktura** — komponenty se rozdělují na menší celky(atoms,molecules) a skládají do větších celků (organims,pages)
 - **CamelCase** — konvence pojmenování proměnných a funkcí
+- **jspdf** - tvorba PDF v aplikaci
 ---
 
 ## 🚀 Spuštění projektu

@@ -4,6 +4,7 @@ export default function AxisNumberRange({
 	toValue,
 	onFromChange,
 	onToChange,
+	options = null,
 }) {
 	return (
 		<div className="filterBlock">
@@ -11,21 +12,47 @@ export default function AxisNumberRange({
 			<div className="filterRangeRow">
 				<label>
 					Od
-					<input
-						type="number"
-						min={0}
-						value={fromValue}
-						onChange={(event) => onFromChange(Number(event.target.value))}
-					/>
+					{options ? (
+						<select
+							value={fromValue}
+							onChange={(event) => onFromChange(Number(event.target.value))}
+						>
+							{options.map((option) => (
+								<option key={option.value} value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</select>
+					) : (
+						<input
+							type="number"
+							min={0}
+							value={fromValue}
+							onChange={(event) => onFromChange(Number(event.target.value))}
+						/>
+					)}
 				</label>
 				<label>
 					Do
-					<input
-						type="number"
-						min={0}
-						value={toValue}
-						onChange={(event) => onToChange(Number(event.target.value))}
-					/>
+					{options ? (
+						<select
+							value={toValue}
+							onChange={(event) => onToChange(Number(event.target.value))}
+						>
+							{options.map((option) => (
+								<option key={option.value} value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</select>
+					) : (
+						<input
+							type="number"
+							min={0}
+							value={toValue}
+							onChange={(event) => onToChange(Number(event.target.value))}
+						/>
+					)}
 				</label>
 			</div>
 		</div>

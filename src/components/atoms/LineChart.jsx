@@ -105,6 +105,13 @@ const LineChart = ({
         plugins: {
             legend: {
                 position: 'bottom',
+                labels: {
+                    color: '#1e221b',
+                    font: {
+                        size: 14,
+                        weight: '600',
+                    },
+                },
             },
             title: {
                 display: false,
@@ -112,9 +119,17 @@ const LineChart = ({
             },
         },
         scales: {
+            x: {
+                ticks: {
+                    color: 'var(--fontColor)',
+                }
+            },
             y: {
                 min: Number.isFinite(yFrom) ? yFrom : 0,
                 max: Number.isFinite(yTo) ? yTo : undefined,
+                ticks: {
+                    color: 'var(--fontColor)',
+                },
             }
         }
     };

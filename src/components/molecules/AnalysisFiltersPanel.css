@@ -6,6 +6,8 @@
     flex-direction: column;
     gap: 14px;
     background: var(--bg);
+    flex: 0 0 280px;
+    min-height: 0;
 }
 
 .analysisFiltersPanel h3 {
