@@ -28,19 +28,33 @@ export default function DashboardPage() {
     const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false)
     const [selectedIngredient, setSelectedIngredient] = useState(null)
     const [orderQty, setOrderQty] = useState(0)
+    const [actionType, setActionType] = useState('plus')
+
+    const openIngredientDialog = (ingredient, nextActionType) => {
+        const defaultQty = nextActionType === 'minus'
+            ? Math.min(ingredient.qty, Math.max(ingredient.qty - ingredient.min_qty, 1))
+            : Math.max(ingredient.min_qty - ingredient.qty, 0)
+
+        setSelectedIngredient(ingredient)
+        setActionType(nextActionType)
+        setOrderQty(defaultQty)
+        setIsOrderDialogOpen(true)
+    }
 
     // Otevře dialog objednávky a nastaví výchozí množství na dorovnání minima
     const handlePlusButtonClick = (ingredient) => {
-        const defaultQty = Math.max(ingredient.min_qty - ingredient.qty, 0)
-        setSelectedIngredient(ingredient)
-        setOrderQty(defaultQty)
-        setIsOrderDialogOpen(true)
+        openIngredientDialog(ingredient, 'plus')
+    }
+
+    const handleMinusButtonClick = (ingredient) => {
+        openIngredientDialog(ingredient, 'minus')
     }
 
     const handleCloseDialog = () => {
         setIsOrderDialogOpen(false)
         setSelectedIngredient(null)
         setOrderQty(0)
+        setActionType('plus')
     }
 
     const handleConfirmOrder = () => {
@@ -48,7 +62,12 @@ export default function DashboardPage() {
 
         const updatedIngredients = ingredients.map((ingredient) => {
             if (ingredient.name === selectedIngredient.name) {
-                return { ...ingredient, qty: ingredient.qty + orderQty }
+                return {
+                    ...ingredient,
+                    qty: actionType === 'minus'
+                        ? Math.max(0, ingredient.qty - orderQty)
+                        : ingredient.qty + orderQty,
+                }
             }
             return ingredient
         })
@@ -66,13 +85,13 @@ export default function DashboardPage() {
                     open={isOrderDialogOpen}
                     onClose={handleCloseDialog}
                     onConfirm={handleConfirmOrder}
-                    title="Objednat surovinu"
+                    title={actionType === 'minus' ? 'Odstranit surovinu' : 'Přidat surovinu'}
                     label={`${selectedIngredient?.name ?? ''} | Aktuálně: ${selectedIngredient?.qty ?? 0} ks | Minimum: ${selectedIngredient?.min_qty ?? 0} ks`}
                     value={orderQty}
                     onChange={(_, newValue) => setOrderQty(typeof newValue === 'number' ? newValue : 0)}
                     min={0}
                     max={100}
-                    confirmText="Potvrdit objednávku"
+                    confirmText={actionType === 'minus' ? 'Odstranit' : 'Přidat'}
                     cancelText="Zrušit"
                 />
                 {/* Graf přehledů zisku */}
@@ -91,6 +110,9 @@ export default function DashboardPage() {
                         <StockTable
                             ingredients={sortedIngredients}
                             onPlusButtonClick={handlePlusButtonClick}
+                            onMinusButtonClick={handleMinusButtonClick}
+                            showMinusButton={false}
+                            actionTitle="Rychlé objednání"
                         />
                     </div>
                 </div>

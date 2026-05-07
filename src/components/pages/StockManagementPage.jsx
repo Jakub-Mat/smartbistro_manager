@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './StockManagementPage.css'
 import StockTable from '../atoms/StockTable.jsx'
+import DialogSlider from '../atoms/DialogSlider.jsx'
 import { readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
 import { initialIngredients } from '../../utils/mockData.js'
 import { getPriority } from '../../utils/storage.js'
@@ -12,14 +13,21 @@ const DEFAULT_FILTERS = {
     sortBy: 'priority',
 }
 
-// TODO: Remove plus icons and functionality for adding stock and removing from stock
 export default function StockManagementPage() {
-    const [ingredients] = useState(() =>
+    const [ingredients, setIngredients] = useState(() =>
         readJson(STORAGE_KEYS.ingredients, initialIngredients)
     )
     const [filters, setFilters] = useState(() =>
         readJson(STORAGE_KEYS.filters || 'smartbistro_stock_filters', DEFAULT_FILTERS)
     )
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [selectedIngredient, setSelectedIngredient] = useState(null)
+    const [quantity, setQuantity] = useState(0)
+    const [actionType, setActionType] = useState('plus')
+
+    useEffect(() => {
+        writeJson(STORAGE_KEYS.ingredients, ingredients)
+    }, [ingredients])
 
     useEffect(() => {
         writeJson('smartbistro_stock_filters', filters)
@@ -34,6 +42,45 @@ export default function StockManagementPage() {
 
     const handleResetFilters = () => {
         setFilters(DEFAULT_FILTERS)
+    }
+
+    const openIngredientDialog = (ingredient, nextActionType) => {
+        setSelectedIngredient(ingredient)
+        setActionType(nextActionType)
+        setQuantity(1)
+        setIsDialogOpen(true)
+    }
+
+    const handlePlusButtonClick = (ingredient) => {
+        openIngredientDialog(ingredient, 'plus')
+    }
+
+    const handleMinusButtonClick = (ingredient) => {
+        openIngredientDialog(ingredient, 'minus')
+    }
+
+    const handleCloseDialog = () => {
+        setIsDialogOpen(false)
+        setSelectedIngredient(null)
+        setQuantity(0)
+        setActionType('plus')
+    }
+
+    const handleConfirmAction = () => {
+        if (!selectedIngredient) return
+
+        setIngredients((previousIngredients) =>
+            previousIngredients.map((ingredient) =>
+                ingredient.name === selectedIngredient.name
+                    ? {
+                        ...ingredient,
+                        qty: actionType === 'minus' ? Math.max(0, ingredient.qty - quantity) 
+                        : ingredient.qty + quantity,
+                    }: ingredient
+            )
+        )
+
+        handleCloseDialog()
     }
 
 
@@ -83,6 +130,19 @@ export default function StockManagementPage() {
     return (
         <div id="content" className="stockManagementContent">
             <section className="stockPanel">
+                <DialogSlider
+                    open={isDialogOpen}
+                    onClose={handleCloseDialog}
+                    onConfirm={handleConfirmAction}
+                    title={actionType === 'minus' ? 'Odebrat surovinu' : 'Přidat surovinu'}
+                    label={`${selectedIngredient?.name ?? ''} | Aktuálně: ${selectedIngredient?.qty ?? 0} ks | Minimum: ${selectedIngredient?.min_qty ?? 0} ks`}
+                    value={quantity}
+                    onChange={(_, newValue) => setQuantity(typeof newValue === 'number' ? newValue : 0)}
+                    min={1}
+                    max={actionType === 'minus' ? (selectedIngredient?.qty ?? 1) : 100}
+                    confirmText={actionType === 'minus' ? 'Odebrat' : 'Přidat'}
+                    cancelText="Zrušit"
+                />
                 <ContentTitle text="Správa skladu" />
                 <span className="stockSubtitle">Celkem položek: {filteredIngredients.length}</span>
 
@@ -134,7 +194,12 @@ export default function StockManagementPage() {
                 </div>
 
                 <div className="stockTableWrapper">
-                    <StockTable ingredients={filteredIngredients} onPlusButtonClick={undefined} />
+                    <StockTable
+                        ingredients={filteredIngredients}
+                        onPlusButtonClick={handlePlusButtonClick}
+                        onMinusButtonClick={handleMinusButtonClick}
+                        actionTitle="Úprava skladu"
+                    />
                 </div>
             </section>
         </div>

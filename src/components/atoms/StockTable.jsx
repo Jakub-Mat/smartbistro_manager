@@ -7,8 +7,15 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
 import { MdAdd as AddIcon } from 'react-icons/md'
+import { MdRemove as RemoveIcon } from 'react-icons/md'
 
-export default function StockTable({ ingredients, onPlusButtonClick }) {
+export default function StockTable({
+    ingredients,
+    onPlusButtonClick,
+    onMinusButtonClick,
+    showMinusButton = true,
+    actionTitle = 'Úprava skladu',
+}) {
 
     const rows = (ingredients ?? []).map((ingredient, index) => ({
       ...ingredient,
@@ -24,7 +31,7 @@ export default function StockTable({ ingredients, onPlusButtonClick }) {
                         <TableCell align="right">Počet (ks)</TableCell>
                         <TableCell align="right">Minimální počet (ks)</TableCell>
                         <TableCell align="right">Cena (Kč)</TableCell>
-                        <TableCell align="center">Rychlé objednání</TableCell>
+                        <TableCell align="center">{actionTitle}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -50,7 +57,16 @@ export default function StockTable({ ingredients, onPlusButtonClick }) {
 
                             <TableCell align="right">{row.min_qty}</TableCell>
                             <TableCell align="right">{row.price}</TableCell>
-                            <TableCell align="center" sx={{ width: '50px'}}>
+                            <TableCell align="center" sx={{ width: '96px'}}>
+                                {showMinusButton && (
+                                    <IconButton
+                                        aria-label={`remove ${row.name}`}
+                                        disabled={row.qty <= 0}
+                                        onClick={() => onMinusButtonClick?.(row)}
+                                    >
+                                        <RemoveIcon style={{color: "#1A1F16", margin: '0'}}/>
+                                    </IconButton>
+                                )}
                                 <IconButton
                                     aria-label={`add ${row.name}`}
                                     onClick={() => onPlusButtonClick?.(row)}
