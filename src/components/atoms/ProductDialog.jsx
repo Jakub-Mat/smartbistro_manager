@@ -6,132 +6,155 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
   TextField,
 } from '@mui/material'
 
+const DEFAULT_STATUS = 'enabledProduct'
 
-// Dialog pro vytvoření nové objednávky zobrazen v MenuPage
+const createEmptyForm = () => ({
+  name: '',
+  price: '',
+  selectedIngredients: [],
+  status: DEFAULT_STATUS,
+})
+
+const buildFormFromProduct = (product) => {
+  if (!product) return createEmptyForm()
+
+  return {
+    name: product.name ?? '',
+    price: product.price ?? '',
+    selectedIngredients: (product.ingredients || []).map((ingredient) => ({
+      name: ingredient.name,
+      qty: ingredient.qty || 1,
+    })),
+    status: product.status || DEFAULT_STATUS,
+  }
+}
+
+// Dialog pro vytvoření i úpravu produktu zobrazený v MenuPage.
 export default function ProductDialog({
   open,
   onClose,
   ingredients = [],
-  onCreateProduct,
+  product,
+  onSaveProduct,
 }) {
-
-  //příprava konstant
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState('')
-  const [selectedIngredients, setSelectedIngredients] = useState([])
-
-  //const [draggedIngredient, setDraggedIngredient] = useState(null)
+  const [form, setForm] = useState(() => buildFormFromProduct(product))
   const [draggedItem, setDraggedItem] = useState(null)
 
+  const availableIngredients = useMemo(() => ingredients, [ingredients])
 
-
-  //načte ingredienci, která se v produktu ještě nevyskytuje
-  const availableIngredients = useMemo(() => {
-    return ingredients
-  }, [ingredients])
-
-  // Vrátí formulář do výchozího stavu.
   const resetForm = () => {
-    setName('')
-    setPrice('')
-    setSelectedIngredients([])
+    setForm(createEmptyForm())
     setDraggedItem(null)
   }
 
-  // Zavře dialog a zároveň smaže rozpracovaný obsah.
   const handleClose = () => {
     resetForm()
     onClose()
   }
 
-  // Uloží aktuálně přetaženou surovinu do lokálního stavu.
-  const handleDragStart = (ingredient,source) => {
-    setDraggedItem({ingredient, source})
+  const handleDragStart = (ingredient, source) => {
+    setDraggedItem({ ingredient, source })
   }
 
-  // Povolení dropu je nutné, jinak prohlížeč přetažení odmítne.
   const handleDragOver = (event) => {
     event.preventDefault()
   }
 
-  // Přidá surovinu do vybraných. Pokud už je tam, zvýší její qty
   const handleDropToSelected = (event) => {
-      console.log('Drop to selected:', draggedItem)
-        event.preventDefault()
-        if (!draggedItem || draggedItem.source !== 'available') return
+    event.preventDefault()
+    if (!draggedItem || draggedItem.source !== 'available') return
 
-        setSelectedIngredients((previous) => {
-            const existing = previous.find(
-                (item) => item.name === draggedItem.ingredient.name
-            )
-            if (existing) {
-              // Zvýšit qty existující ingredience
-              return previous.map(item =>
-                item.name === draggedItem.ingredient.name
-                  ? { ...item, qty: item.qty + 1 }
-                  : item
-              )
-            }
-            // Přidat novou s qty = 1
-            return [...previous, { ...draggedItem.ingredient, qty: 1 }]
-        })
+    setForm((previous) => {
+      const existing = previous.selectedIngredients.find(
+        (item) => item.name === draggedItem.ingredient.name,
+      )
 
-        setDraggedItem(null)
+      if (existing) {
+        return {
+          ...previous,
+          selectedIngredients: previous.selectedIngredients.map((item) =>
+            item.name === draggedItem.ingredient.name
+              ? { ...item, qty: item.qty + 1 }
+              : item,
+          ),
+        }
+      }
+
+      return {
+        ...previous,
+        selectedIngredients: [
+          ...previous.selectedIngredients,
+          { name: draggedItem.ingredient.name, qty: 1 },
+        ],
+      }
+    })
+
+    setDraggedItem(null)
   }
 
   const handleDropToAvailable = (event) => {
-        event.preventDefault()
-        if (!draggedItem || draggedItem.source !== 'selected') return
+    event.preventDefault()
+    if (!draggedItem || draggedItem.source !== 'selected') return
 
-        setSelectedIngredients((previous) =>
-            previous.filter((item) => item.name !== draggedItem.ingredient.name)
-        )
+    setForm((previous) => ({
+      ...previous,
+      selectedIngredients: previous.selectedIngredients.filter(
+        (item) => item.name !== draggedItem.ingredient.name,
+      ),
+    }))
 
-        setDraggedItem(null)
+    setDraggedItem(null)
   }
 
-  // Zvýšit množství ingredience
   const handleIncreaseQty = (ingredientName) => {
-    setSelectedIngredients((previous) =>
-      previous.map(item =>
-        item.name === ingredientName ? { ...item, qty: item.qty + 1 } : item
-      )
-    )
+    setForm((previous) => ({
+      ...previous,
+      selectedIngredients: previous.selectedIngredients.map((item) =>
+        item.name === ingredientName ? { ...item, qty: item.qty + 1 } : item,
+      ),
+    }))
   }
 
-  // Snížit množství ingredience (min. 1)
   const handleDecreaseQty = (ingredientName) => {
-    setSelectedIngredients((previous) =>
-      previous.map(item =>
-        item.name === ingredientName && item.qty > 1 ? { ...item, qty: item.qty - 1 } : item
-      )
-    )
+    setForm((previous) => ({
+      ...previous,
+      selectedIngredients: previous.selectedIngredients.map((item) =>
+        item.name === ingredientName && item.qty > 1
+          ? { ...item, qty: item.qty - 1 }
+          : item,
+      ),
+    }))
   }
 
-
-  // Odeslání vytvořeného produktu rodičovské komponentě.
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const numericPrice = Number(price)
+    const numericPrice = Number(form.price)
     const isValid =
-      name.trim() !== '' &&
+      form.name.trim() !== '' &&
       Number.isFinite(numericPrice) &&
       numericPrice >= 0 &&
-      selectedIngredients.length > 0
+      form.selectedIngredients.length > 0 &&
+      ['enabledProduct', 'disabledProduct', 'hiddenProduct'].includes(form.status)
 
     if (!isValid) return
 
-    onCreateProduct({
-      id: Date.now(),
-      name: name.trim(),
+    onSaveProduct({
+      id: product?.id ?? Date.now(),
+      name: form.name.trim(),
       price: Math.round(numericPrice),
-      ingredients: selectedIngredients.map((ingredient) => ({
+      status: form.status,
+      ingredients: form.selectedIngredients.map((ingredient) => ({
         name: ingredient.name,
-        qty: ingredient.qty || 1
+        qty: ingredient.qty || 1,
       })),
     })
 
@@ -139,21 +162,22 @@ export default function ProductDialog({
   }
 
   const isFormValid =
-    name.trim() !== '' &&
-    Number.isFinite(Number(price)) &&
-    Number(price) >= 0 &&
-    selectedIngredients.length > 0
+    form.name.trim() !== '' &&
+    Number.isFinite(Number(form.price)) &&
+    Number(form.price) >= 0 &&
+    form.selectedIngredients.length > 0 &&
+    ['enabledProduct', 'disabledProduct', 'hiddenProduct'].includes(form.status)
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Přidat nový produkt</DialogTitle>
+      <DialogTitle>{product ? 'Upravit produkt' : 'Přidat nový produkt'}</DialogTitle>
 
       <form onSubmit={handleSubmit}>
         <DialogContent className="product-dialog__content">
           <TextField
             label="Název produktu"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={form.name}
+            onChange={(event) => setForm((previous) => ({ ...previous, name: event.target.value }))}
             required
             fullWidth
           />
@@ -161,12 +185,26 @@ export default function ProductDialog({
           <TextField
             label="Cena (Kč)"
             type="number"
-            value={price}
-            onChange={(event) => setPrice(event.target.value)}
+            value={form.price}
+            onChange={(event) => setForm((previous) => ({ ...previous, price: event.target.value }))}
             required
             fullWidth
             slotProps={{ htmlInput: { min: 0, step: 1, inputMode: 'numeric' } }}
           />
+
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Stav produktu</FormLabel>
+            <RadioGroup
+              row
+              value={form.status}
+              onChange={(event) => setForm((previous) => ({ ...previous, status: event.target.value }))}
+            >
+              <FormControlLabel value="enabledProduct" control={<Radio />} label="Aktivovat" />
+              <FormControlLabel value="disabledProduct" control={<Radio />} label="Deaktivovat" />
+              <FormControlLabel value="hiddenProduct" control={<Radio />} label="Skrýt" />
+            </RadioGroup>
+          </FormControl>
+
           <div className="product-dialog__columns">
               <section
                     className="product-dialog__availablezone"
@@ -204,12 +242,12 @@ export default function ProductDialog({
                   {/*</p>*/}
 
                   <div className="product-dialog__ingredients">
-                      {selectedIngredients.length === 0 ? (
+                      {form.selectedIngredients.length === 0 ? (
                       <span className="product-dialog__empty">
                           Zatím nejsou vybrané žádné suroviny.
                       </span>
                       ) : (
-                          selectedIngredients.map((ingredient) => (
+                          form.selectedIngredients.map((ingredient) => (
                               <div
                                   key={ingredient.name}
                                   className="product-dialog__ingredient"
@@ -258,10 +296,10 @@ export default function ProductDialog({
 
         <DialogActions>
           <Button onClick={handleClose} color="inherit">
-            Zrušit
+            Zavřít
           </Button>
           <Button type="submit" variant="contained" disabled={!isFormValid}>
-            Přidat
+            Uložit
           </Button>
         </DialogActions>
       </form>

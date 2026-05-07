@@ -73,7 +73,7 @@ export const initialProducts = [
       { name: 'Hořčice', qty: 1 }
     ],
     price: 150,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 2,
@@ -85,7 +85,7 @@ export const initialProducts = [
       { name: 'Hovězí maso (porce)', qty: 1 }
     ],
     price: 120,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 3,
@@ -98,7 +98,7 @@ export const initialProducts = [
       { name: 'Červená cibule', qty: 1 }
     ],
     price: 155,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 4,
@@ -113,7 +113,7 @@ export const initialProducts = [
       { name: 'Kyselá okurka', qty: 1 }
     ],
     price: 165,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 5,
@@ -127,7 +127,7 @@ export const initialProducts = [
       { name: 'Kečup', qty: 1 }
     ],
     price: 150,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 6,
@@ -145,7 +145,7 @@ export const initialProducts = [
       { name: 'Hořčice', qty: 1 }
     ],
     price: 210,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 7,
@@ -158,7 +158,7 @@ export const initialProducts = [
       { name: 'Sýr Cheddar (plátek)', qty: 1 }
     ],
     price: 145,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 8,
@@ -171,7 +171,7 @@ export const initialProducts = [
       { name: 'Rajče', qty: 1 }
     ],
     price: 155,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 9,
@@ -185,7 +185,7 @@ export const initialProducts = [
       { name: 'Hořčice', qty: 1 }
     ],
     price: 170,
-    enable: true
+    status: 'enabledProduct'
   },
   {
     id: 10,
@@ -199,7 +199,7 @@ export const initialProducts = [
       { name: 'Červená cibule', qty: 1 }
     ],
     price: 135,
-    enable: true
+    status: 'enabledProduct'
   }
 ]
 

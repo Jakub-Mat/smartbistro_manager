@@ -1,11 +1,9 @@
 import './ProductCard.css'
-import {useLocation} from "react-router-dom";
 
 
-export default function ProductCard({ product, onClick, className }) {
-    const location = useLocation();
-
-    const classes = `productCard ${className || ''} ${!product.enable ? 'disabled' : 'enable'}`.trim()
+export default function ProductCard({ product, onClick, className, actionLabel = 'Upravit', isActionDisabled = false }) {
+    const productStatus = product.status || (product.enable ? 'enabledProduct' : 'disabledProduct')
+    const classes = `productCard ${className || ''} ${productStatus}`.trim()
   return (
     <div className={classes}>
       <h3>{product.name}</h3>
@@ -15,8 +13,8 @@ export default function ProductCard({ product, onClick, className }) {
       </p>
       <div className="cardFooter">
         <span className="price">{product.price} Kč</span>
-        <button className="btnAdd" onClick={() => onClick(product)}>
-            {location.pathname === '/kiosk' ? '+' : (product.enable ? 'Deaktivovat' : 'Aktivovat')}
+        <button className="btnAdd" type="button" disabled={isActionDisabled} onClick={() => onClick?.(product)}>
+            {actionLabel}
         </button>
       </div>
     </div>

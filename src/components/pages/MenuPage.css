@@ -45,6 +45,19 @@
   width: 100px;
 }
 
-.menuPageLayout .productCard.enable .btnAdd {
-    background-color: var(--highlightRed);
+.menuPageLayout .productCard.enabledProduct .btnAdd {
+    background-color: var(--primary);
 }
+
+.menuPageLayout .productCard.hiddenProduct {
+    border-color: #999;
+}
+
+.menuPageLayout .productCard.hiddenProduct .btnAdd {
+    background-color: #999;
+}
+
+.menuPageLayout .productCard.disabledProduct .btnAdd {
+  background-color: var(--primary);
+}
+

@@ -2,7 +2,7 @@ import './MenuPage.css'
 import { useState } from 'react'
 import { Card } from '@mui/material'
 import ProductDialog from '../atoms/ProductDialog'
-import { readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
+import { normalizeProduct, readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
 import { initialIngredients, initialProducts } from '../../utils/mockData.js'
 import ProductCard from "../atoms/ProductCard.jsx";
 
@@ -14,42 +14,52 @@ export default function MenuPage() {
     readJson(STORAGE_KEYS.products, initialProducts)
   )
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
   // Otevře dialog pro vytvoření nového produktu.
-  const openDialog = () => {
+  const openCreateDialog = () => {
+    setSelectedProduct(null)
+    setIsDialogOpen(true)
+  }
+
+  const openEditDialog = (product) => {
+    setSelectedProduct(product)
     setIsDialogOpen(true)
   }
 
   // Zavře dialog; vyčištění formuláře řeší samotná komponenta dialogu.
   const closeDialog = () => {
     setIsDialogOpen(false)
+    setSelectedProduct(null)
   }
 
-  // Přidá nově vytvořený produkt do seznamu a uloží do storage
-  const handleCreateProduct = (product) => {
-    const normalizedProduct = {
+  // Uloží vytvořený nebo upravený produkt do seznamu a do storage.
+  const handleSaveProduct = (product) => {
+    const normalizedProduct = normalizeProduct({
       ...product,
       price: Math.round(product.price),
-    }
-    const newProducts = [...products, normalizedProduct]
+    })
+
+    const exists = products.some((item) => item.id === normalizedProduct.id)
+    const newProducts = exists
+      ? products.map((item) => (item.id === normalizedProduct.id ? normalizedProduct : item))
+      : [...products, normalizedProduct]
+
     setProducts(newProducts)
     writeJson(STORAGE_KEYS.products, newProducts)
   }
-
-  //Deaktivuje objekt v seznamu produktů a uloží změnu do storage
-  const handleToggleProduct = (product) => {
-    const updatedProducts = products.map(p =>
-        p.id === product.id ? { ...p, enable: !p.enable } : p
-    )
-    setProducts(updatedProducts)
-    writeJson(STORAGE_KEYS.products, updatedProducts)
-}
 
   return (
     <div id="content" className="menuPage">
       <div className="menuPageLayout" role="list">
         {products.map((product) => (
-            <ProductCard product={product} key={product.id} onClick={handleToggleProduct} className="menuPageProduct"/>
+            <ProductCard
+              product={product}
+              key={product.id}
+              onClick={openEditDialog}
+              actionLabel="Upravit"
+              className="menuPageProduct"
+            />
         ))}
 
         <Card
@@ -58,17 +68,19 @@ export default function MenuPage() {
           type="button"
           aria-label="Přidat nový produkt"
           elevation={0}
-          onClick={openDialog}
+          onClick={openCreateDialog}
         >
           <span className="productCardAddIcon">+</span>
         </Card>
       </div>
 
       <ProductDialog
+        key={`${isDialogOpen ? 'open' : 'closed'}-${selectedProduct?.id ?? 'new'}`}
         open={isDialogOpen}
         onClose={closeDialog}
         ingredients={ingredients}
-        onCreateProduct={handleCreateProduct}
+        product={selectedProduct}
+        onSaveProduct={handleSaveProduct}
       />
     </div>
   )

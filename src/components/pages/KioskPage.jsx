@@ -6,26 +6,10 @@ import KioskCart from '../molecules/KioskCart.jsx'
 import './KioskPage.css'
 
 export default function KioskPage() {
-  const getSyncedProductsOnLoad = () => {
-    const currentProducts = readJson(STORAGE_KEYS.products, initialProducts)
-    const currentIngredients = readJson(STORAGE_KEYS.ingredients, initialIngredients)
-
-    const updatedProducts = currentProducts.map((product) => {
-      const hasEnough = (product.ingredients || []).every((ingredient) => {
-        const stock = currentIngredients.find((i) => i.name === ingredient.name)
-        return stock && stock.qty >= (ingredient.qty || 1)
-      })
-      return { ...product, enable: !!hasEnough }
-    })
-
-    writeJson(STORAGE_KEYS.products, updatedProducts)
-    return updatedProducts
-  }
-
   const [cart, setCart] = useState([])
   const [orderSubmitted, setOrderSubmitted] = useState(false)
-  // Načtení produktů z localStorage pokud už tam nejsou
-  const [products, setProducts] = useState(getSyncedProductsOnLoad)
+  const [products] = useState(() => readJson(STORAGE_KEYS.products, initialProducts))
+  const [ingredients, setIngredients] = useState(() => readJson(STORAGE_KEYS.ingredients, initialIngredients))
 
   const getRequiredIngredients = (product, quantity = 1) => {
     const required = new Map()
@@ -38,53 +22,23 @@ export default function KioskPage() {
     return required
   }
 
-  const disableProductIfNeeded = (product, quantity = 1) => {
-    const currentProducts = readJson(STORAGE_KEYS.products, initialProducts)
-    const currentIngredients = readJson(STORAGE_KEYS.ingredients, initialIngredients)
-    const productToCheck = currentProducts.find((p) => p.id === product.id) || product
-    const requiredIngredients = getRequiredIngredients(productToCheck, quantity)
-
-    const hasEnough = Array.from(requiredIngredients.entries()).every(([name, needed]) => {
-      const stock = currentIngredients.find((i) => i.name === name)
+  const canFulfillProduct = (product, quantity = 1) => {
+    if (product.status !== 'enabledProduct') return false
+    const requiredIngredients = getRequiredIngredients(product, quantity)
+    return Array.from(requiredIngredients.entries()).every(([name, needed]) => {
+      const stock = ingredients.find((i) => i.name === name)
       return stock && stock.qty >= needed
     })
-
-    if (hasEnough) return true
-
-    const updatedProducts = currentProducts.map((p) =>
-      p.id === product.id ? { ...p, enable: false } : p,
-    )
-    setProducts(updatedProducts)
-    writeJson(STORAGE_KEYS.products, updatedProducts)
-    return false
-  }
-
-  const enableProductIfPossible = (product) => {
-    const currentProducts = readJson(STORAGE_KEYS.products, initialProducts)
-    const currentIngredients = readJson(STORAGE_KEYS.ingredients, initialIngredients)
-    const productToCheck = currentProducts.find((p) => p.id === product.id) || product
-    const requiredIngredients = getRequiredIngredients(productToCheck, 1)
-
-    const hasEnough = Array.from(requiredIngredients.entries()).every(([name, needed]) => {
-      const stock = currentIngredients.find((i) => i.name === name)
-      return stock && stock.qty >= needed
-    })
-
-    if (!hasEnough) return false
-
-    const updatedProducts = currentProducts.map((p) =>
-      p.id === product.id ? { ...p, enable: true } : p,
-    )
-    setProducts(updatedProducts)
-    writeJson(STORAGE_KEYS.products, updatedProducts)
-    return true
   }
 
   const handleAddToCart = (product) => {
     const existing = cart.find((item) => item.id === product.id)
     const nextQuantity = existing ? existing.quantity + 1 : 1
 
-    if (!disableProductIfNeeded(product, nextQuantity)) return
+    if (!canFulfillProduct(product, nextQuantity)) {
+      alert('Produkt není dostupný nebo na něj nejsou dostatečné zásoby.')
+      return
+    }
 
     setCart((prevCart) => {
       const prevItem = prevCart.find((item) => item.id === product.id)
@@ -101,9 +55,13 @@ export default function KioskPage() {
 
   const handleRemoveFromCart = (productId, isIncrease) => {
     const item = cart.find((i) => i.id === productId)
+
     if (isIncrease && item) {
       const product = products.find((p) => p.id === productId) || item
-      if (!disableProductIfNeeded(product, item.quantity + 1)) return
+      if (!canFulfillProduct(product, item.quantity + 1)) {
+        alert('Produkt není dostupný nebo na něj nejsou dostatečné zásoby.')
+        return
+      }
     }
 
     setCart((prevCart) => {
@@ -119,13 +77,9 @@ export default function KioskPage() {
       }
 
       if (item.quantity <= 1) {
-        const product = products.find((p) => p.id === productId) || item
-        enableProductIfPossible(product)
         return prevCart.filter((i) => i.id !== productId)
       }
 
-      const product = products.find((p) => p.id === productId) || item
-      enableProductIfPossible(product)
       return prevCart.map((i) =>
         i.id === productId
           ? { ...i, quantity: i.quantity - 1 }
@@ -142,8 +96,8 @@ export default function KioskPage() {
     if (cart.length === 0) return
 
     // Načíst aktuální zásoby a produkty
-    const currentProducts = readJson(STORAGE_KEYS.products, initialProducts)
-    const currentIngredients = readJson(STORAGE_KEYS.ingredients, initialIngredients)
+    const currentProducts = products
+    const currentIngredients = ingredients
     const orders = readJson(STORAGE_KEYS.orders, [])
 
     // Spočítat potřebu surovin na základě košíku
@@ -180,6 +134,7 @@ export default function KioskPage() {
       return { ...ing, qty: ing.qty - needed }
     })
     writeJson(STORAGE_KEYS.ingredients, updatedIngredients)
+    setIngredients(updatedIngredients)
 
     // Vytvořit objednávku
     const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0)
@@ -213,13 +168,23 @@ export default function KioskPage() {
   return (
       <div id="kioskContent">
         <div className="productsGrid">
-          {products.map(product => (
+          {products
+            .filter((product) => product.status !== 'hiddenProduct')
+            .map(product => {
+              const cartItem = cart.find((item) => item.id === product.id)
+              const nextQuantity = cartItem ? cartItem.quantity + 1 : 1
+              const isActionDisabled = !canFulfillProduct(product, nextQuantity)
+
+              return (
             <KioskProductCard
               key={product.id}
               product={product}
               onClick={handleAddToCart}
+              actionLabel="+"
+              isActionDisabled={isActionDisabled}
             />
-          ))}
+              )
+            })}
         </div>
 
         <KioskCart

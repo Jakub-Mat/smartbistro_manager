@@ -49,8 +49,16 @@
   margin: 0;
 }
 
-.productsGrid .productCard.disabled{
+.productsGrid .productCard.disabledProduct{
   cursor: not-allowed;
   opacity: 0.5;
-  pointer-events: none;
+}
+
+
+.productsGrid .productCard.disabledProduct {
+  opacity: 0.6;
+}
+
+.productsGrid .productCard.hiddenProduct {
+  opacity: 0.45;
 }
