@@ -65,70 +65,139 @@ export const initialProducts = [
   {
     id: 1,
     name: 'Chessburger',
-    ingredients: ['Houska', 'Kečup', 'Kyselá okurka', 'Hovězí maso (porce)', 'Hořčice'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Kečup', qty: 1 },
+      { name: 'Kyselá okurka', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Hořčice', qty: 1 }
+    ],
     price: 150,
     enable: true
   },
   {
     id: 2,
     name: 'Hamburger',
-    ingredients: ['Houska', 'Kečup', 'Kyselá okurka', 'Hovězí maso (porce)'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Kečup', qty: 1 },
+      { name: 'Kyselá okurka', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 }
+    ],
     price: 120,
     enable: true
   },
   {
     id: 3,
     name: 'Baconburger',
-    ingredients: ['Houska', 'Hovězí maso (porce)', 'Slanina (plátek)', 'Kečup', 'Červená cibule'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Slanina (plátek)', qty: 1 },
+      { name: 'Kečup', qty: 1 },
+      { name: 'Červená cibule', qty: 1 }
+    ],
     price: 155,
     enable: true
   },
   {
     id: 4,
     name: 'Bacon & Cheese Burger',
-    ingredients: ['Houska', 'Hovězí maso (porce)', 'Sýr Cheddar (plátek)', 'Slanina (plátek)', 'Hořčice', 'Kečup', 'Kyselá okurka'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Sýr Cheddar (plátek)', qty: 2 },
+      { name: 'Slanina (plátek)', qty: 1 },
+      { name: 'Hořčice', qty: 1 },
+      { name: 'Kečup', qty: 1 },
+      { name: 'Kyselá okurka', qty: 1 }
+    ],
     price: 165,
     enable: true
   },
   {
     id: 5,
     name: 'Fresh Burger',
-    ingredients: ['Houska', 'Hovězí maso (porce)', 'Ledový salát', 'Rajče', 'Červená cibule', 'Kečup'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Ledový salát', qty: 1 },
+      { name: 'Rajče', qty: 2 },
+      { name: 'Červená cibule', qty: 1 },
+      { name: 'Kečup', qty: 1 }
+    ],
     price: 150,
     enable: true
   },
   {
     id: 6,
     name: 'Royal Deluxe',
-    ingredients: ['Houska', 'Hovězí maso (porce)', 'Sýr Cheddar (plátek)', 'Slanina (plátek)', 'Ledový salát', 'Rajče', 'Červená cibule', 'Kyselá okurka', 'Kečup', 'Hořčice'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Sýr Cheddar (plátek)', qty: 2 },
+      { name: 'Slanina (plátek)', qty: 1 },
+      { name: 'Ledový salát', qty: 1 },
+      { name: 'Rajče', qty: 2 },
+      { name: 'Červená cibule', qty: 1 },
+      { name: 'Kyselá okurka', qty: 1 },
+      { name: 'Kečup', qty: 1 },
+      { name: 'Hořčice', qty: 1 }
+    ],
     price: 210,
     enable: true
   },
   {
     id: 7,
     name: 'Onion Burger',
-    ingredients: ['Houska', 'Hovězí maso (porce)', 'Červená cibule', 'Hořčice', 'Sýr Cheddar (plátek)'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Červená cibule', qty: 2 },
+      { name: 'Hořčice', qty: 1 },
+      { name: 'Sýr Cheddar (plátek)', qty: 1 }
+    ],
     price: 145,
     enable: true
   },
   {
     id: 8,
     name: 'Salad Cheese Burger',
-    ingredients: ['Houska', 'Hovězí maso (porce)', 'Sýr Cheddar (plátek)', 'Ledový salát', 'Rajče'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Sýr Cheddar (plátek)', qty: 1 },
+      { name: 'Ledový salát', qty: 1 },
+      { name: 'Rajče', qty: 1 }
+    ],
     price: 155,
     enable: true
   },
   {
     id: 9,
     name: 'Farmer Burger',
-    ingredients: ['Houska', 'Hovězí maso (porce)', 'Slanina (plátek)', 'Červená cibule', 'Ledový salát', 'Hořčice'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Slanina (plátek)', qty: 1 },
+      { name: 'Červená cibule', qty: 2 },
+      { name: 'Ledový salát', qty: 1 },
+      { name: 'Hořčice', qty: 1 }
+    ],
     price: 170,
     enable: true
   },
   {
     id: 10,
     name: 'Classic Standard',
-    ingredients: ['Houska', 'Hovězí maso (porce)', 'Kečup', 'Hořčice', 'Kyselá okurka', 'Červená cibule'],
+    ingredients: [
+      { name: 'Houska', qty: 1 },
+      { name: 'Hovězí maso (porce)', qty: 1 },
+      { name: 'Kečup', qty: 1 },
+      { name: 'Hořčice', qty: 1 },
+      { name: 'Kyselá okurka', qty: 1 },
+      { name: 'Červená cibule', qty: 1 }
+    ],
     price: 135,
     enable: true
   }

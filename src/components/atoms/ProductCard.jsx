@@ -10,7 +10,8 @@ export default function ProductCard({ product, onClick, className }) {
     <div className={classes}>
       <h3>{product.name}</h3>
       <p className="ingredients">
-        <strong>Obsahuje:</strong> {product.ingredients.join(', ')}
+          {/*String s obsahem surovin*/}
+        <strong>Obsahuje:</strong> {product.ingredients.map(i => `${i.name}${i.qty > 1 ? ' x' + i.qty : ''}`).join(', ')}
       </p>
       <div className="cardFooter">
         <span className="price">{product.price} Kč</span>

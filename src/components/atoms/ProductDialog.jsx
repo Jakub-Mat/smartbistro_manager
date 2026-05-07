@@ -9,6 +9,8 @@ import {
   TextField,
 } from '@mui/material'
 
+
+// Dialog pro vytvoření nové objednávky zobrazen v MenuPage
 export default function ProductDialog({
   open,
   onClose,
@@ -26,15 +28,10 @@ export default function ProductDialog({
 
 
 
-  //načte jména ingrediencí, které ještě nebyly přidány do produktu, aby se nenabízely k výběru.
+  //načte ingredienci, která se v produktu ještě nevyskytuje
   const availableIngredients = useMemo(() => {
-    return ingredients.filter(
-      (ingredient) =>
-        !selectedIngredients.some(
-          (selected) => selected.name === ingredient.name,
-        ),
-    )
-  }, [ingredients, selectedIngredients])
+    return ingredients
+  }, [ingredients])
 
   // Vrátí formulář do výchozího stavu.
   const resetForm = () => {
@@ -60,18 +57,26 @@ export default function ProductDialog({
     event.preventDefault()
   }
 
-  // Přidá surovinu do vybraných, pokud už tam není.
+  // Přidá surovinu do vybraných. Pokud už je tam, zvýší její qty
   const handleDropToSelected = (event) => {
       console.log('Drop to selected:', draggedItem)
         event.preventDefault()
         if (!draggedItem || draggedItem.source !== 'available') return
 
         setSelectedIngredients((previous) => {
-            const exists = previous.some(
+            const existing = previous.find(
                 (item) => item.name === draggedItem.ingredient.name
             )
-            if (exists) return previous
-            return [...previous, draggedItem.ingredient]
+            if (existing) {
+              // Zvýšit qty existující ingredience
+              return previous.map(item =>
+                item.name === draggedItem.ingredient.name
+                  ? { ...item, qty: item.qty + 1 }
+                  : item
+              )
+            }
+            // Přidat novou s qty = 1
+            return [...previous, { ...draggedItem.ingredient, qty: 1 }]
         })
 
         setDraggedItem(null)
@@ -86,6 +91,24 @@ export default function ProductDialog({
         )
 
         setDraggedItem(null)
+  }
+
+  // Zvýšit množství ingredience
+  const handleIncreaseQty = (ingredientName) => {
+    setSelectedIngredients((previous) =>
+      previous.map(item =>
+        item.name === ingredientName ? { ...item, qty: item.qty + 1 } : item
+      )
+    )
+  }
+
+  // Snížit množství ingredience (min. 1)
+  const handleDecreaseQty = (ingredientName) => {
+    setSelectedIngredients((previous) =>
+      previous.map(item =>
+        item.name === ingredientName && item.qty > 1 ? { ...item, qty: item.qty - 1 } : item
+      )
+    )
   }
 
 
@@ -106,7 +129,10 @@ export default function ProductDialog({
       id: Date.now(),
       name: name.trim(),
       price: Math.round(numericPrice),
-      ingredients: selectedIngredients.map((ingredient) => ingredient.name),
+      ingredients: selectedIngredients.map((ingredient) => ({
+        name: ingredient.name,
+        qty: ingredient.qty || 1
+      })),
     })
 
     handleClose()
@@ -194,7 +220,33 @@ export default function ProductDialog({
                                       {ingredient.name}
                                   </div>
                                   <div className="product-dialog__ingredient-meta">
-                                      {ingredient.qty} ks · {ingredient.price} Kč
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                          <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                handleDecreaseQty(ingredient.name)
+                                              }}
+                                              style={{ padding: '2px 6px', fontSize: '12px' }}
+                                          >
+                                              −
+                                          </button>
+                                          <span style={{ minWidth: '30px', textAlign: 'center' }}>
+                                              {ingredient.qty}x
+                                          </span>
+                                          <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.preventDefault()
+                                                e.stopPropagation()
+                                                handleIncreaseQty(ingredient.name)
+                                              }}
+                                              style={{ padding: '2px 6px', fontSize: '12px' }}
+                                          >
+                                              +
+                                          </button>
+                                      </div>
                                   </div>
                               </div>
                           ))
