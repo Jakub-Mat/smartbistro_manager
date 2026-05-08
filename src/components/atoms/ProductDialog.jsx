@@ -144,6 +144,7 @@ export default function ProductDialog({
       form.name.trim() !== '' &&
       Number.isFinite(numericPrice) &&
       numericPrice >= 0 &&
+      numericPrice <= 100000 &&
       form.selectedIngredients.length > 0 &&
       ['enabledProduct', 'disabledProduct', 'hiddenProduct'].includes(form.status)
 
@@ -167,6 +168,7 @@ export default function ProductDialog({
     form.name.trim() !== '' &&
     Number.isFinite(Number(form.price)) &&
     Number(form.price) >= 0 &&
+    Number(form.price) <= 100000 &&
     form.selectedIngredients.length > 0 &&
     ['enabledProduct', 'disabledProduct', 'hiddenProduct'].includes(form.status)
 
