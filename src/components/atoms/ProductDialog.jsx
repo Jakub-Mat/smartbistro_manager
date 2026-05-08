@@ -126,11 +126,13 @@ export default function ProductDialog({
   const handleDecreaseQty = (ingredientName) => {
     setForm((previous) => ({
       ...previous,
-      selectedIngredients: previous.selectedIngredients.map((item) =>
-        item.name === ingredientName && item.qty > 1
-          ? { ...item, qty: item.qty - 1 }
-          : item,
-      ),
+      selectedIngredients: previous.selectedIngredients
+        .map((item) =>
+          item.name === ingredientName
+            ? { ...item, qty: item.qty - 1 }
+            : item,
+        )
+        .filter((item) => item.qty > 0),
     }))
   }
 
@@ -173,7 +175,7 @@ export default function ProductDialog({
       <DialogTitle>{product ? 'Upravit produkt' : 'Přidat nový produkt'}</DialogTitle>
 
       <form onSubmit={handleSubmit}>
-        <DialogContent className="product-dialog__content">
+        <DialogContent className="productDialogContent">
           <TextField
             label="Název produktu"
             value={form.name}
@@ -205,25 +207,25 @@ export default function ProductDialog({
             </RadioGroup>
           </FormControl>
 
-          <div className="product-dialog__columns">
+            <div className="productDialogColumns">
               <section
-                    className="product-dialog__availablezone"
+                className="productDialogAvailableZone"
                     onDrop={handleDropToAvailable}
                     onDragOver={handleDragOver}
               >
-                  <h4 className="product-dialog__section-title">Dostupné suroviny</h4>
-                  <div className="product-dialog__ingredients">
+                <h4 className="productDialogSectionTitle">Dostupné suroviny</h4>
+                <div className="productDialogIngredients">
                       {availableIngredients.map((ingredient) => (
                           <div
                               key={ingredient.name}
-                              className="product-dialog__ingredient"
+                      className="productDialogIngredient"
                               draggable
                               onDragStart={() => handleDragStart(ingredient, 'available')}
                           >
-                              <div className="product-dialog__ingredient-name">
+                      <div className="productDialogIngredientName">
                                   {ingredient.name}
                               </div>
-                              <div className="product-dialog__ingredient-meta">
+                      <div className="productDialogIngredientMeta">
                                     {ingredient.qty} ks · {ingredient.price} Kč
                               </div>
                           </div>
@@ -232,32 +234,32 @@ export default function ProductDialog({
               </section>
 
               <section
-                  className="product-dialog__selectedzone"
+                className="productDialogSelectedZone"
                   onDrop={handleDropToSelected}
                   onDragOver={handleDragOver}
               >
-                  <h4 className="product-dialog__section-title">Vybrané suroviny</h4>
-                  {/*<p className="product-dialog__hint">*/}
+                <h4 className="productDialogSectionTitle">Vybrané suroviny</h4>
+                {/*<p className="productDialogHint">*/}
                   {/*    Přetáhni suroviny sem a kliknutím na štítek je zase odebereš.*/}
                   {/*</p>*/}
 
-                  <div className="product-dialog__ingredients">
+                <div className="productDialogIngredients">
                       {form.selectedIngredients.length === 0 ? (
-                      <span className="product-dialog__empty">
+                  <span className="productDialogEmpty">
                           Zatím nejsou vybrané žádné suroviny.
                       </span>
                       ) : (
                           form.selectedIngredients.map((ingredient) => (
                               <div
                                   key={ingredient.name}
-                                  className="product-dialog__ingredient"
+                        className="productDialogIngredient"
                                   draggable
                                   onDragStart={() => handleDragStart(ingredient, 'selected')}
                               >
-                                  <div className="product-dialog__ingredient-name">
+                        <div className="productDialogIngredientName">
                                       {ingredient.name}
                                   </div>
-                                  <div className="product-dialog__ingredient-meta">
+                        <div className="productDialogIngredientMeta">
                                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                           <button
                                               type="button"

@@ -71,3 +71,13 @@ export const getPriority = (item) => {
   if (item.qty === item.min_qty) return 1
   return 2
 }
+
+// Custom event pro aktualizaci dat po vytvoření nové objednávky pro custom hook useOrders
+// Vytvořit custom event
+export const ORDER_CREATED_EVENT = 'smartbistro:orderCreated'
+
+export function dispatchOrderCreatedEvent(newOrder) {
+  window.dispatchEvent(
+    new CustomEvent(ORDER_CREATED_EVENT, { detail: newOrder })
+  )
+}

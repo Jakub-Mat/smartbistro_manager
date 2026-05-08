@@ -23,6 +23,11 @@ export default function ProfileModal({ isOpen, onClose }) {
         setIsPasswordEditing((prev) => !prev)
     }
 
+    const handleLogout = () => {
+        localStorage.clear()
+        window.location.reload()
+    }
+
     useEffect(() => {
         if (!isOpen) return
 
@@ -95,7 +100,7 @@ export default function ProfileModal({ isOpen, onClose }) {
                     >
                         {switchButtonLabel}
                     </button>
-                    <button className="buttonLogout">Odhlášení</button>
+                    <button type="button" className="buttonLogout" onClick={handleLogout}>Odhlášení</button>
                 </div>
             </div>
         </div>

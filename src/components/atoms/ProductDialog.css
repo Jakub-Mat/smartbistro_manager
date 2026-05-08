@@ -1,53 +1,53 @@
-.product-dialog__content {
+.productDialogContent {
   display: grid;
   gap: 16px;
   padding-top: 8px !important;
 }
 
-.product-dialog__section-title {
+.productDialogSectionTitle {
   margin: 0 0 8px;
   font-size: 1rem;
   font-weight: 700;
 }
 
-.product-dialog__columns {
+.productDialogColumns {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
 @media (max-width: 760px) {
-  .product-dialog__columns {
+  .productDialogColumns {
     grid-template-columns: 1fr;
   }
 }
 
-.product-dialog__hint {
+.productDialogHint {
   margin: 0 0 12px;
   font-size: 0.95rem;
   opacity: 0.75;
 }
 
-.product-dialog__dropzone {
+.productDialogDropzone {
   border: 2px dashed var(--primary);
   border-radius: 16px;
   padding: 16px;
   background: rgba(0, 0, 0, 0.03);
 }
 
-.product-dialog__selected-list {
+.productDialogSelectedList {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   min-height: 42px;
 }
 
-.product-dialog__empty {
+.productDialogEmpty {
   color: rgba(0, 0, 0, 0.55);
   font-style: italic;
 }
 
-.product-dialog__chip {
+.productDialogChip {
   border: 1px solid var(--fontColor);
   border-radius: 999px;
   padding: 8px 12px;
@@ -56,13 +56,13 @@
   cursor: pointer;
 }
 
-.product-dialog__ingredients {
+.productDialogIngredients {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 10px;
 }
 
-.product-dialog__ingredient {
+.productDialogIngredient {
   border: 1px solid var(--primary);
   border-radius: 14px;
   padding: 12px;
@@ -71,15 +71,15 @@
   user-select: none;
 }
 
-.product-dialog__ingredient:active {
+.productDialogIngredient:active {
   cursor: grabbing;
 }
 
-.product-dialog__ingredient-name {
+.productDialogIngredientName {
   font-weight: 600;
 }
 
-.product-dialog__ingredient-meta {
+.productDialogIngredientMeta {
   margin-top: 4px;
   font-size: 0.9rem;
   opacity: 0.75;

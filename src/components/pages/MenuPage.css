@@ -51,10 +51,16 @@
 
 .menuPageLayout .productCard.hiddenProduct {
     border-color: #999;
+    border-style: dashed;
+
 }
 
 .menuPageLayout .productCard.hiddenProduct .btnAdd {
     background-color: #999;
+}
+
+.menuPageLayout .productCard.disabledProduct {
+    border-style: dashed;
 }
 
 .menuPageLayout .productCard.disabledProduct .btnAdd {

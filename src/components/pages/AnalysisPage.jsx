@@ -3,8 +3,8 @@ import LineChart, { LINE_CHART_LABELS } from '../atoms/LineChart.jsx'
 import OrderTable from '../atoms/OrderTable.jsx'
 import AnalysisFiltersPanel from '../molecules/AnalysisFiltersPanel.jsx'
 import './AnalysisPage.css'
-import ContentTitle from "../atoms/ContentTitle.jsx";
-import { initialOrders } from '../../utils/mockData.js'
+import ContentTitle from "../atoms/ContentTitle.jsx"
+import useOrders from '../../hooks/useOrders.js'
 
 const DEFAULT_FILTERS = {
     xFrom: 0,
@@ -20,22 +20,6 @@ const currencyFormatter = new Intl.NumberFormat('cs-CZ', {
     maximumFractionDigits: 0,
 })
 
-const currentYearFinancialState = initialOrders.reduce((sum, order) => {
-    if (!order?.timestamp) return sum
-
-    const orderDate = new Date(order.timestamp)
-    if (Number.isNaN(orderDate.getTime())) return sum
-
-    if (orderDate.getUTCFullYear() !== CURRENT_YEAR) return sum
-
-    return sum + (Number.isFinite(order.totalPrice) ? order.totalPrice : 0)
-}, 0)
-
-//Dynamické generování možností pro osu Y na základě maximální ceny objednávky, zaokrouhlené na nejbližší vyšší 10 000 Kč
-const maxOrderPrice = initialOrders.reduce((max, order) => {
-    const price = Number.isFinite(order.totalPrice) ? order.totalPrice : 0
-    return Math.max(max, price)
-}, 0)
 
 const generateYAxisOptions = (maxValue, step = 10000) => {
     const roundedMax = Math.ceil(maxValue / step) * step
@@ -49,13 +33,28 @@ const generateYAxisOptions = (maxValue, step = 10000) => {
     return options
 }
 
-const yAxisOptions = generateYAxisOptions(maxOrderPrice)
 
 export default function AnalysisPage() {
 
     const [appliedFilters, setAppliedFilters] = useState(DEFAULT_FILTERS)
     const [draftFilters, setDraftFilters] = useState(DEFAULT_FILTERS)
+    const orders = useOrders()
 
+    const currentYearFinancialState = orders.reduce((sum, order) => {
+        if (!order?.timestamp) return sum
+        const orderDate = new Date(order.timestamp)
+        if (Number.isNaN(orderDate.getTime())) return sum
+        if (orderDate.getUTCFullYear() !== CURRENT_YEAR) return sum
+        return sum + (Number.isFinite(order.totalPrice) ? order.totalPrice : 0)
+    }, 0)
+
+    //Dynamické generování možností pro osu Y na základě maximální ceny objednávky, zaokrouhlené na nejbližší vyšší 10 000 Kč
+    const maxOrderPrice = orders.reduce((max, order) => {
+        const price = Number.isFinite(order.totalPrice) ? order.totalPrice : 0
+        return Math.max(max, price)
+    }, 0)
+
+    const yAxisOptions = generateYAxisOptions(maxOrderPrice)
     const monthOptions = LINE_CHART_LABELS.map((label, index) => ({
         label,
         value: index,

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
+import { readJson, writeJson, STORAGE_KEYS, dispatchOrderCreatedEvent } from '../../utils/storage.js'
 import { initialProducts, initialIngredients } from '../../utils/mockData.js'
 import KioskProductCard from '../atoms/ProductCard.jsx'
 import KioskCart from '../molecules/KioskCart.jsx'
@@ -154,6 +154,9 @@ export default function KioskPage() {
     }
 
     writeJson(STORAGE_KEYS.orders, [...orders, newOrder])
+    
+    // Odeslat custom event pro aktualizaci dat v useOrders
+    dispatchOrderCreatedEvent(newOrder)
 
     // Zobrazit potvrzení
     setOrderSubmitted(true)

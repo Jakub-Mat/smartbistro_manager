@@ -15,6 +15,9 @@ import { STORAGE_KEYS, readJson } from '../../utils/storage.js'
 export default function OrderTable() {
     const orders = readJson(STORAGE_KEYS.orders, initialOrders)
 
+    const sortedOrders = [...orders].sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+    )
 
     const loadUnicodeFont = async (doc) => {
         const response = await fetch('/fonts/arial.ttf')
@@ -38,6 +41,24 @@ export default function OrderTable() {
         doc.setFont('ArialUnicode')
     }
 
+    const getProductRows = (products = []) => {
+        const rows = products.map((product, index) => {
+            if (typeof product === 'string') {
+                return [product, '1x']
+            }
+
+            const productName = product?.name ?? `Produkt ${index + 1}`
+            const productQuantity = Number(product?.quantity ?? product?.qty ?? 1)
+            return [productName, `${productQuantity}x`]
+        })
+
+        if (rows.length === 0) {
+            return [['Bez položek', '-']]
+        }
+
+        return rows
+    }
+
     const handlePdfClick = async (order) => {
         const doc = new jsPDF()
     
@@ -49,11 +70,11 @@ export default function OrderTable() {
         doc.setFontSize(11)
         doc.text(`Datum: ${new Date(order.timestamp).toLocaleString('cs-CZ')}`, 14, 26)
         doc.text(`Počet ks: ${order.quantity}`, 14, 33)
-        doc.text(`Cena: ${order.totalPrice} Kč`, 14, 40)
+        doc.text(`Celková cena: ${order.totalPrice} Kč`, 14, 40)
     
         autoTable(doc, {
-            startY: 50,
-            head: [['Položka', 'Hodnota']],
+            startY: 48,
+            head: [['Produkt', 'Množství']],
                 styles: {
                     font: 'ArialUnicode',
                     fontStyle: 'normal',
@@ -62,12 +83,7 @@ export default function OrderTable() {
                     font: 'ArialUnicode',
                     fontStyle: 'normal',
                 },
-            body: [
-            ['ID objednávky', String(order.id)],
-            ['Produkty', (order.products ?? []).join(', ')],
-            ['Počet ks', String(order.quantity)],
-            ['Celková cena', `${order.totalPrice} Kč`],
-            ],
+            body: getProductRows(order.products),
         })
     
         const pdfBlob = doc.output('blob')
@@ -88,7 +104,7 @@ export default function OrderTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {orders.map((order) => (
+                    {sortedOrders.map((order) => (
                         <TableRow
                             key={order.id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
