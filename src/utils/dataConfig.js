@@ -6,4 +6,4 @@
  * - './mockData2.js' = coffee shop demo
  */
 
-export { initialIngredients, initialProducts, initialOrders } from './mockData1.js'
+export { initialIngredients, initialProducts, initialOrders } from './mockData2.js'

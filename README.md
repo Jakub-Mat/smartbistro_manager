@@ -1,6 +1,6 @@
 # 🍔 SmartBistro Manager
 
-> Komplexní systém pro správu provozu a logistiku malého gastra — školní projekt KIV/UUR
+> Komplexní systém pro správu provozu a logistiku malé provozovny — školní projekt KIV/UUR
 
 ---
 

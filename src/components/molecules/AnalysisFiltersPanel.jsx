@@ -1,6 +1,7 @@
 import AxisSelectRange from '../atoms/AxisSelectRange.jsx'
 import AxisNumberRange from '../atoms/AxisNumberRange.jsx'
 import FilterActionButtons from '../atoms/FilterActionButtons.jsx'
+import LineVisibilitySelect from '../atoms/LineVisibilitySelect.jsx'
 import './AnalysisFiltersPanel.css'
 
 export default function AnalysisFiltersPanel({
@@ -11,6 +12,8 @@ export default function AnalysisFiltersPanel({
     onXToChange,
     onYFromChange,
     onYToChange,
+    lineVisibilityValue,
+    onLineVisibilityChange,
     onApply,
     onCancel,
 }) {
@@ -35,6 +38,8 @@ export default function AnalysisFiltersPanel({
                 onFromChange={onYFromChange}
                 onToChange={onYToChange}
             />
+
+            <LineVisibilitySelect value={lineVisibilityValue} onChange={onLineVisibilityChange} />
 
             <FilterActionButtons onApply={onApply} onCancel={onCancel} />
         </aside>

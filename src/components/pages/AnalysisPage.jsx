@@ -10,7 +10,7 @@ const DEFAULT_FILTERS = {
     xFrom: 0,
     xTo: LINE_CHART_LABELS.length - 1,
     yFrom: 0,
-    yTo: 70_000,
+    hiddenLine: '',
 }
 
 const CURRENT_YEAR = 2026
@@ -21,7 +21,26 @@ const currencyFormatter = new Intl.NumberFormat('cs-CZ', {
 })
 
 
-const generateYAxisOptions = (maxValue, step = 10000) => {
+const getMaxOrderPrice = (orders) => {
+    return orders.reduce((max, order) => {
+        const price = Number.isFinite(order.totalPrice) ? order.totalPrice : 0
+        return Math.max(max, price)
+    }, 0)
+}
+
+const getYAxisStep = (maxValue) => {
+    if (maxValue <= 100) return 10
+    if (maxValue <= 500) return 25
+    if (maxValue <= 1_000) return 50
+    if (maxValue <= 5_000) return 250
+    if (maxValue <= 10_000) return 500
+    if (maxValue <= 50_000) return 2_500
+    if (maxValue <= 100_000) return 5_000
+    return 10_000
+}
+
+const generateYAxisOptions = (maxValue) => {
+    const step = getYAxisStep(maxValue)
     const roundedMax = Math.ceil(maxValue / step) * step
     const options = []
     for (let i = 0; i <= roundedMax; i += step) {
@@ -33,12 +52,35 @@ const generateYAxisOptions = (maxValue, step = 10000) => {
     return options
 }
 
+const normalizeFilters = (filters, maxYAxisValue) => {
+    const nextYFrom = Math.min(Math.max(filters.yFrom, 0), maxYAxisValue)
+    const nextYTo = Math.min(Math.max(filters.yTo, nextYFrom), maxYAxisValue)
+
+    return {
+        ...filters,
+        yFrom: nextYFrom,
+        yTo: nextYTo,
+    }
+}
 
 export default function AnalysisPage() {
 
-    const [appliedFilters, setAppliedFilters] = useState(DEFAULT_FILTERS)
-    const [draftFilters, setDraftFilters] = useState(DEFAULT_FILTERS)
     const orders = useOrders()
+
+    const maxOrderPrice = getMaxOrderPrice(orders)
+    const yAxisOptions = generateYAxisOptions(maxOrderPrice)
+    const maxYAxisValue = yAxisOptions.at(-1)?.value ?? 0
+
+    const [appliedFilters, setAppliedFilters] = useState(() => ({
+        ...DEFAULT_FILTERS,
+        yTo: maxYAxisValue,
+    }))
+    const [draftFilters, setDraftFilters] = useState(() => ({
+        ...DEFAULT_FILTERS,
+        yTo: maxYAxisValue,
+    }))
+    const normalizedAppliedFilters = normalizeFilters(appliedFilters, maxYAxisValue)
+    const normalizedDraftFilters = normalizeFilters(draftFilters, maxYAxisValue)
 
     const currentYearFinancialState = orders.reduce((sum, order) => {
         if (!order?.timestamp) return sum
@@ -48,13 +90,6 @@ export default function AnalysisPage() {
         return sum + (Number.isFinite(order.totalPrice) ? order.totalPrice : 0)
     }, 0)
 
-    //Dynamické generování možností pro osu Y na základě maximální ceny objednávky, zaokrouhlené na nejbližší vyšší 10 000 Kč
-    const maxOrderPrice = orders.reduce((max, order) => {
-        const price = Number.isFinite(order.totalPrice) ? order.totalPrice : 0
-        return Math.max(max, price)
-    }, 0)
-
-    const yAxisOptions = generateYAxisOptions(maxOrderPrice)
     const monthOptions = LINE_CHART_LABELS.map((label, index) => ({
         label,
         value: index,
@@ -92,12 +127,19 @@ export default function AnalysisPage() {
         }))
     }
 
+    const handleLineVisibilityChange = (value) => {
+        setDraftFilters((previous) => ({
+            ...previous,
+            hiddenLine: value,
+        }))
+    }
+
     const handleApply = () => {
-        setAppliedFilters(draftFilters)
+        setAppliedFilters(normalizedDraftFilters)
     }
 
     const handleCancel = () => {
-        setDraftFilters(appliedFilters)
+        setDraftFilters(normalizedAppliedFilters)
     }
 
     return (
@@ -108,21 +150,24 @@ export default function AnalysisPage() {
                         <ContentTitle text={"Přehled přijmů za rok 2024 a 2025"}/>
                         <div className="analysisChartContainer">
                             <LineChart
-                                xFrom={appliedFilters.xFrom}
-                                xTo={appliedFilters.xTo}
-                                yFrom={appliedFilters.yFrom}
-                                yTo={appliedFilters.yTo}
+                                xFrom={normalizedAppliedFilters.xFrom}
+                                xTo={normalizedAppliedFilters.xTo}
+                                yFrom={normalizedAppliedFilters.yFrom}
+                                yTo={normalizedAppliedFilters.yTo}
+                                hiddenLine={normalizedAppliedFilters.hiddenLine}
                             />
                         </div>
                     </div>
                     <AnalysisFiltersPanel
-                        draftFilters={draftFilters}
+                        draftFilters={normalizedDraftFilters}
                         monthOptions={monthOptions}
                         yAxisOptions={yAxisOptions}
                         onXFromChange={handleXFromChange}
                         onXToChange={handleXToChange}
                         onYFromChange={handleYFromChange}
                         onYToChange={handleYToChange}
+                        lineVisibilityValue={normalizedDraftFilters.hiddenLine}
+                        onLineVisibilityChange={handleLineVisibilityChange}
                         onApply={handleApply}
                         onCancel={handleCancel}
                     />

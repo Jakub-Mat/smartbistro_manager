@@ -1,7 +1,7 @@
 const lineOptions = [
     { value: '', label: 'Zobrazit obě linky' },
-    { value: 'currentYear', label: 'Skrýt aktuální rok' },
-    { value: 'previousYear', label: 'Skrýt minulý rok' },
+    { value: 'year2026', label: 'Skrýt aktuální rok' },
+    { value: 'year2025', label: 'Skrýt minulý rok' },
 ]
 
 export default function LineVisibilitySelect({ value, onChange }) {
