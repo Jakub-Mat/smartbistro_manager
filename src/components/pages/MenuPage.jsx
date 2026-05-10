@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Card } from '@mui/material'
 import ProductDialog from '../atoms/ProductDialog'
 import { normalizeProduct, readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
-import { initialIngredients, initialProducts } from '../../utils/mockData.js'
+import { initialIngredients, initialProducts } from '../../utils/dataConfig.js'
 import ProductCard from "../atoms/ProductCard.jsx";
 
 export default function MenuPage() {

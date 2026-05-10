@@ -10,7 +10,6 @@ import {
     Legend,
     Filler
 } from 'chart.js';
-import { initialOrders } from '../../utils/mockData.js'
 import useOrders from '../../hooks/useOrders';
 
 // Registrace prvků potřebných pro spojnicový graf
@@ -53,10 +52,7 @@ const LineChart = ({
     const visibleLabels = MONTH_LABELS.slice(safeFrom, safeTo + 1);
     
     
-    const liveOrders = useOrders()
-    const orders = Array.isArray(liveOrders) && liveOrders.length > 0
-      ? liveOrders
-      : initialOrders
+        const orders = useOrders()
 
     // Sčítání totalPrice za jednotlivé měsíce pro konkrétní rok (UTC)
     const getMonthlyTotals = (orders, year) => {

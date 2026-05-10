@@ -3,9 +3,11 @@ import './StockManagementPage.css'
 import StockTable from '../atoms/StockTable.jsx'
 import DialogSlider from '../atoms/DialogSlider.jsx'
 import { readJson, writeJson, STORAGE_KEYS } from '../../utils/storage.js'
-import { initialIngredients } from '../../utils/mockData.js'
+import { initialIngredients } from '../../utils/dataConfig.js'
 import { getPriority } from '../../utils/storage.js'
 import ContentTitle from "../atoms/ContentTitle.jsx";
+
+const LEGACY_FILTERS_KEY = 'smartbistro_stock_filters'
 
 const DEFAULT_FILTERS = {
     query: '',
@@ -18,7 +20,7 @@ export default function StockManagementPage() {
         readJson(STORAGE_KEYS.ingredients, initialIngredients)
     )
     const [filters, setFilters] = useState(() =>
-        readJson(STORAGE_KEYS.filters || 'smartbistro_stock_filters', DEFAULT_FILTERS)
+        readJson(STORAGE_KEYS.filters, readJson(LEGACY_FILTERS_KEY, DEFAULT_FILTERS))
     )
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedIngredient, setSelectedIngredient] = useState(null)
@@ -30,7 +32,7 @@ export default function StockManagementPage() {
     }, [ingredients])
 
     useEffect(() => {
-        writeJson('smartbistro_stock_filters', filters)
+        writeJson(STORAGE_KEYS.filters, filters)
     }, [filters])
 
     const handleFilterChange = (key, value) => {

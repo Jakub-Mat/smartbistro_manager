@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { readJson, writeJson, STORAGE_KEYS, dispatchOrderCreatedEvent } from '../../utils/storage.js'
-import { initialProducts, initialIngredients } from '../../utils/mockData.js'
+import { initialProducts, initialIngredients } from '../../utils/dataConfig.js'
 import KioskProductCard from '../atoms/ProductCard.jsx'
 import KioskCart from '../molecules/KioskCart.jsx'
 import './KioskPage.css'

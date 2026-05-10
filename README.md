@@ -10,6 +10,21 @@ SmartBistro Manager je webová aplikace navržená pro manažery a personál mal
 
 Projekt vznikl v rámci předmětu **KIV/UUR** a vychází z reálných zkušeností z provozu — důraz je kladen na praktické řešení skutečných problémů (zmatek v objednávkách, docházející suroviny, ruční inventura).
 
+## 🧱 Datová architektura
+
+Aplikace je postavená tak, aby se data načetla při startu do `localStorage` a pak se v běžném provozu používala už jen odsud.
+
+- [src/utils/dataConfig.js](src/utils/dataConfig.js) je jediné místo, kde se ručně přepíná aktivní dataset.
+- [src/utils/storage.js](src/utils/storage.js) řeší seedování, čtení, zápis a případné migrování dat v `localStorage`.
+- Komponenty a hooky už nemají číst mock data přímo, ale přes storage/helper vrstvu.
+- `initialIngredients`, `initialProducts` a `initialOrders` jsou seed data aktivního datasetu, ne samostatný runtime zdroj.
+
+Aktuálně jsou připravené dvě datové sady:
+- `mockData1` pro burger provoz
+- `mockData2` pro malou kavárnu
+
+Přepnutí znamená upravit jen export v [src/utils/dataConfig.js](src/utils/dataConfig.js).
+
 ---
 
 ## ✨ Funkce
@@ -65,7 +80,7 @@ SmartBistro Manager
 
 - Ze skladu lze objednávat bez omezení (není implementována žádná hlubší finanční logika)
 - Aplikace nehlídá doby spotřeby, alergeny ani šarže — sleduje pouze počty kusů
-- Aktuální nabídka je omezena na burgery (UI/UX demo, ne produkční katalog)
+- Aktuální nabídka závisí na zvoleném datasetu v [src/utils/dataConfig.js](src/utils/dataConfig.js)
 - Finanční logika je aktivní pouze při objednávání (bez napojení na skutečný „bankovní" účet)
 
 ---
@@ -85,9 +100,19 @@ SmartBistro Manager
 
 - **React** — frontend framework
 - **MUI (Material UI) + MUI X** — komponenty (Data Grid, Tree View)
-- **Atomic design struktura** — komponenty se rozdělují na menší celky(atoms,molecules) a skládají do větších celků (organims,pages)
+- **Atomic design struktura** — komponenty se rozdělují na menší celky (atoms, molecules) a skládají do větších celků (organisms, pages)
 - **CamelCase** — konvence pojmenování proměnných a funkcí
 - **jspdf** - tvorba PDF v aplikaci
+
+---
+
+## 🔄 Jak data fungují
+
+1. Při startu aplikace se v [App.jsx](src/App.jsx) zavolá `seedLocalStorage()`.
+2. `seedLocalStorage()` doplní do `localStorage` výchozí data z aktivního datasetu, pokud tam ještě nejsou.
+3. UI potom čte už jen přes `readJson(...)` a specializované hooky jako `useOrders`.
+4. Změny v aplikaci se zapisují zpět do `localStorage`, takže ten je za běhu zdrojem pravdy.
+5. Pokud chceš jiný demo dataset, změníš jen [src/utils/dataConfig.js](src/utils/dataConfig.js).
 ---
 
 ## 🚀 Spuštění projektu

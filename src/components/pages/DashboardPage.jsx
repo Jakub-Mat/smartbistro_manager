@@ -6,7 +6,7 @@ import DialogSlider from '../atoms/DialogSlider.jsx'
 import { useState } from 'react'
 import ContentTitle from "../atoms/ContentTitle.jsx"
 import { readJson, writeJson, STORAGE_KEYS, getPriority } from '../../utils/storage.js'
-import { initialIngredients } from '../../utils/mockData.js'
+import { initialIngredients } from '../../utils/dataConfig.js'
 
 
 export default function DashboardPage() {

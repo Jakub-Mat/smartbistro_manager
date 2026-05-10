@@ -1,7 +1,10 @@
-import { initialIngredients, initialProducts, initialOrders } from './mockData.js'
+import { initialIngredients, initialProducts, initialOrders } from './dataConfig.js'
 
- const PRODUCT_STATUSES = new Set(['enabledProduct', 'disabledProduct', 'hiddenProduct'])
+// Povolené stavy produktu v aplikaci.
+const PRODUCT_STATUSES = new Set(['enabledProduct', 'disabledProduct', 'hiddenProduct'])
 
+// Převede jeden produkt do jednotného tvaru.
+// Podporuje i starší formát s `enable` místo `status`.
 export function normalizeProduct(product) {
   if (!product || typeof product !== 'object') return product
 
@@ -18,10 +21,12 @@ export function normalizeProduct(product) {
   }
 }
 
+// Převede pole produktů přes normalizaci jednotlivých položek.
 export function normalizeProducts(products) {
   return Array.isArray(products) ? products.map(normalizeProduct) : products
 }
 
+// Klíče, pod kterými aplikace ukládá data do localStorage.
 export const STORAGE_KEYS = {
   ingredients: 'smartbistro_ingredients',
   products: 'smartbistro_products',
@@ -29,6 +34,8 @@ export const STORAGE_KEYS = {
   filters: 'smartbistro_filters',
 }
 
+// Načte JSON z localStorage.
+// U produktů navíc zajistí jejich normalizaci na aktuální strukturu.
 export function readJson(key, fallback) {
   try {
     const raw = localStorage.getItem(key)
@@ -43,10 +50,13 @@ export function readJson(key, fallback) {
   }
 }
 
+// Zapíše hodnotu do localStorage jako JSON.
 export function writeJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value))
 }
 
+// Při prvním spuštění doplní do localStorage výchozí mock data.
+// U produktů zároveň migruje starší uložený formát na nový.
 export function seedLocalStorage() {
   if (localStorage.getItem(STORAGE_KEYS.ingredients) === null) {
     writeJson(STORAGE_KEYS.ingredients, initialIngredients)
@@ -64,18 +74,18 @@ export function seedLocalStorage() {
   }
 }
 
-// ŘAZENÍ PRO TABULKU StockTable
-//vypočte prioritu pro řazení: 0 = červená, 1 = oranžová, 2 = ostatní
+// Pomocná priorita pro řazení skladové tabulky.
+// 0 = pod minimem, 1 = přesně minimum, 2 = ostatní.
 export const getPriority = (item) => {
   if (item.qty < item.min_qty) return 0
   if (item.qty === item.min_qty) return 1
   return 2
 }
 
-// Custom event pro aktualizaci dat po vytvoření nové objednávky pro custom hook useOrders
-// Vytvořit custom event
+// Custom event, který oznamuje vytvoření nové objednávky.
 export const ORDER_CREATED_EVENT = 'smartbistro:orderCreated'
 
+// Vyvolá event pro ostatní části aplikace, aby si mohly obnovit data.
 export function dispatchOrderCreatedEvent(newOrder) {
   window.dispatchEvent(
     new CustomEvent(ORDER_CREATED_EVENT, { detail: newOrder })

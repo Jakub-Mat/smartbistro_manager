@@ -9,11 +9,10 @@ import IconButton from '@mui/material/IconButton'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { FaRegFilePdf as AddIcon} from "react-icons/fa6";
-import { initialOrders } from '../../utils/mockData.js'
-import { STORAGE_KEYS, readJson } from '../../utils/storage.js'
+import useOrders from '../../hooks/useOrders'
 
 export default function OrderTable() {
-    const orders = readJson(STORAGE_KEYS.orders, initialOrders)
+    const orders = useOrders()
 
     const sortedOrders = [...orders].sort(
         (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
