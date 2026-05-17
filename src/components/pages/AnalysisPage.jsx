@@ -147,7 +147,7 @@ export default function AnalysisPage() {
             <div className="analysisMainColumn">
                 <section className="analysisChartSection">
                     <div className="analysisChartContent">
-                        <ContentTitle text={"Přehled přijmů za rok 2024 a 2025"}/>
+                        <ContentTitle text={"Přehled přijmů za rok 2025 a 2026"}/>
                         <div className="analysisChartContainer">
                             <LineChart
                                 xFrom={normalizedAppliedFilters.xFrom}

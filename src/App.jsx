@@ -10,19 +10,6 @@ import MenuPage from "./components/pages/MenuPage.jsx";
 import StockManagementPage from "./components/pages/StockManagementPage.jsx";
 import KioskPage from "./components/pages/KioskPage.jsx";
 
-// TODO: RESPONSIBILITA
-
-// TODO: Debugging: - DONE
-// ⦁	Aktualizovat finační stav - DONE
-// ⦁	Špatně zobrazené PDF - DONE
-// ⦁	Aktualizovat po přidání objednávky věci (graf,tabulky) - DONE
-// ⦁	V jídelním lístku minus at odebere produkt v burgru - DONE
-// ⦁	Pod=červená - DONE
-// ⦁	Na=orandžová -DONE
-// ⦁	Nad=zelená - DONE
-// ⦁	Řadit objednávky od nejnovějších - DONE
-// ⦁	Upravit nadpis grafu - DONE
-
 function App() {
   // Seed localStorage s mock daty při prvním spuštění aplikace
   useEffect(() => {
