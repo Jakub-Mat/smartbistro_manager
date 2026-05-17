@@ -19,6 +19,8 @@
 @media (max-width: 760px) {
   .productDialogColumns {
     grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column-reverse;
   }
 }
 
@@ -83,5 +85,41 @@
   margin-top: 4px;
   font-size: 0.9rem;
   opacity: 0.75;
+}
+
+.productDialogAvailableZone {
+  border-radius: 12px;
+  border: 2px dashed var(--primary);
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.productDialogAvailableZone.dragover {
+  background: rgba(0, 0, 0, 0.08);
+  border: 2px dashed var(--primary);
+}
+
+.productDialogSelectedZone {
+  border-radius: 12px;
+  border: 2px dashed #2196f3;
+  padding: 8px;
+  min-height: 150px;
+  background: rgba(33, 150, 243, 0.05);
+}
+
+.productDialogSelectedZone.dragover {
+  background: rgba(33, 150, 243, 0.15);
+  border: 2px dashed #1976d2;
+}
+
+@media (max-width: 760px) {
+  .productDialogSelectedZone {
+    min-height: auto;
+    margin-bottom: 16px;
+  }
+  
+  .productDialogIngredients {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
 }
 

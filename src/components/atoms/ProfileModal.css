@@ -136,3 +136,51 @@
 /*.buttonLogout:hover {*/
 /*    background-color: var(--betterOrange);*/
 /*}*/
+
+@media (max-width: 600px) {
+    .profileModalOverlay {
+        position: fixed;
+        top: 60px; /* place below topBar (60px as defined in layout) */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 450px; /* keep same width as desktop */
+        max-width: 80vw;
+        padding-top: 15px; /* add some space from top */
+        justify-content: flex-start;
+        z-index: 1100;
+    }
+
+    .profileModalContent {
+        width: 100%;
+        max-width: none;
+        border-radius: 6px;
+    }
+
+    .profileModalHeader {
+        padding: 12px;
+    }
+
+    .profileModalHeader h2 {
+        font-size: 1.1rem;
+    }
+
+    .profileModalBody {
+        padding: 12px;
+    }
+
+    .profileField input {
+        padding: 6px;
+        font-size: 0.95rem;
+    }
+
+    .profileModalFooter {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .buttonKiosk,
+    .buttonLogout {
+        padding: 8px;
+        font-size: 0.95rem;
+    }
+}

@@ -10,6 +10,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { FaRegFilePdf as AddIcon} from "react-icons/fa6";
 import useOrders from '../../hooks/useOrders'
+import './OrderTable.css'
 
 export default function OrderTable() {
     const orders = useOrders()
@@ -91,24 +92,23 @@ export default function OrderTable() {
     }
 
     return (
-        <TableContainer component={Paper}  sx={{backgroundColor: "inherit"}}>
-            <Table aria-label="simple table">
-                <TableHead>
+        <TableContainer id="orderTableContainer">
+            <Table>
+                <TableHead className="tableHead">
                     <TableRow>
                         <TableCell>ID objednávky </TableCell>
-                        <TableCell align="right">čas objednávky</TableCell>
+                        <TableCell align="right">Čas objednávky</TableCell>
                         <TableCell align="right">Počet ks</TableCell>
                         <TableCell align="right">Cena</TableCell>
                         <TableCell align="center">Actions</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody className="tableBody">
                     {sortedOrders.map((order) => (
                         <TableRow
                             key={order.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell component="th" scope="row">
+                            <TableCell component="th" scope="row" align="center">
                                 {order.id}
                             </TableCell>
                             <TableCell align="right">
@@ -126,6 +126,7 @@ export default function OrderTable() {
                             <TableCell align="right">{order.totalPrice} Kč</TableCell>
                             <TableCell align="center">
                                 <IconButton
+                                    className="orderButton"
                                     aria-label={`add ${order.id}`}
                                     onClick={() => handlePdfClick(order)}
                                 >

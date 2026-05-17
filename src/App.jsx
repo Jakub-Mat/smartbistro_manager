@@ -11,15 +11,16 @@ import StockManagementPage from "./components/pages/StockManagementPage.jsx";
 import KioskPage from "./components/pages/KioskPage.jsx";
 
 // TODO: RESPONSIBILITA
-// TODO: Debugging:
-// ⦁	Aktualizovat finační stav
-// ⦁	Špatně zobrazené PDF
-// ⦁	Aktualizovat po přidání objednávky věci (graf,tabulky)
-// ⦁	V jídelním lístku minus at odebere produkt v burgru
-// ⦁	Pod=červená
-// ⦁	Na=orandžová
-// ⦁	Nad=zelená
-// ⦁	Řadit objednávky od nejnovějších
+
+// TODO: Debugging: - DONE
+// ⦁	Aktualizovat finační stav - DONE
+// ⦁	Špatně zobrazené PDF - DONE
+// ⦁	Aktualizovat po přidání objednávky věci (graf,tabulky) - DONE
+// ⦁	V jídelním lístku minus at odebere produkt v burgru - DONE
+// ⦁	Pod=červená - DONE
+// ⦁	Na=orandžová -DONE
+// ⦁	Nad=zelená - DONE
+// ⦁	Řadit objednávky od nejnovějších - DONE
 // ⦁	Upravit nadpis grafu - DONE
 
 function App() {

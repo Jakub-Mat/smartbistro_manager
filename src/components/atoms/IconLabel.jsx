@@ -3,11 +3,11 @@ export default function IconLabel({text, icon, onclick, id}){
 
     return (
         <>
-            <div id={id} onClick={onclick} className="viewBox">
-                <span id="icon">
+            <div id={id} onClick={onclick} className="viewBox iconLabel">
+                <span className="iconLabelIcon">
                     {icon}
                 </span>
-                <span id="label">
+                <span className="iconLabelLabel">
                     {text}
                 </span>
             </div>

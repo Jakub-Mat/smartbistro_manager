@@ -18,7 +18,7 @@ export default function AnalysisFiltersPanel({
     onCancel,
 }) {
     return (
-        <aside className="analysisFiltersPanel">
+        <div className="analysisFiltersPanel">
             <h3>Filtrace grafu</h3>
 
             <AxisSelectRange
@@ -42,7 +42,7 @@ export default function AnalysisFiltersPanel({
             <LineVisibilitySelect value={lineVisibilityValue} onChange={onLineVisibilityChange} />
 
             <FilterActionButtons onApply={onApply} onCancel={onCancel} />
-        </aside>
+        </div>
     )
 }
 

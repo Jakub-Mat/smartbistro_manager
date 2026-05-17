@@ -4,17 +4,17 @@
     border: transparent;
 }
 
-#icon {
+.iconLabelIcon {
     color: var(--primary);
-    margin: auto 10px auto auto;
+    margin: auto 0.625rem auto auto;
     width: var(--btnSize);
     height: var(--btnSize);
 }
 
-#label{
+.iconLabelLabel{
     margin: auto;
-    padding-right: 5px;
-    padding-left: 3px;
+    padding-right: 0.3125rem;
+    padding-left: 0.1875rem;
     font-size: 1.3rem;
 }
 

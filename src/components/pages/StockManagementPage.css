@@ -85,5 +85,10 @@
     }
 }
 
+@media (max-width: 600px) {
+    .stockManagementContent {
+        padding: 10px !important;
+    }
+}
 
 

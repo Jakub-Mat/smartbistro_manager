@@ -1,8 +1,13 @@
 #kioskContent {
   display: grid;
-  grid-template-columns: 1fr 350px;
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr);
   gap: 20px;
   padding: 20px;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .productsGrid {
@@ -13,6 +18,10 @@
   align-content: start;
   overflow-y: auto;
   padding-right: 10px;
+}
+
+.kioskCart {
+  min-height: 0;
 }
 
 .orderConfirmation {
@@ -61,4 +70,48 @@
 
 .productsGrid .productCard.hiddenProduct {
   opacity: 0.45;
+}
+
+/* Tablet: Cart as sticky bottom */
+@media (min-width: 600px) {
+  .productsGrid {
+    padding-right: 0;
+    overflow-y: auto;
+  }
+  
+  #kioskContent {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+
+  .kioskCart {
+    position: static;
+    border-top: 3px solid #333;
+    border-radius: 8px 8px 0 0;
+    margin: 0;
+    padding: 20px;
+    max-height: none;
+    z-index: auto;
+  }
+}
+
+/* Desktop: Cart on right side, narrower */
+@media (min-width: 1100px) {
+  #kioskContent {
+    grid-template-columns: 1fr 280px;
+    grid-template-rows: auto;
+  }
+
+  .productsGrid {
+    padding-right: 10px;
+    overflow-y: auto;
+  }
+
+  .kioskCart {
+    align-self: stretch;
+    border-top: 3px solid #333;
+    border-radius: 8px;
+    margin: 0;
+    padding: 20px;
+  }
 }

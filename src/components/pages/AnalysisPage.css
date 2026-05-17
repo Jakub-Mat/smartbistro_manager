@@ -90,8 +90,20 @@
 }
 
 @media (max-width: 1100px) {
+    .analysisContent {
+        padding: 15px !important v;
+    }
+
     .analysisChartSection {
         flex-direction: column;
+    }
+
+    .analysisChartContainer {
+        min-height: 350px;
+    }
+
+    .analysisFiltersPanel {
+        min-height: fit-content;;
     }
 }
 

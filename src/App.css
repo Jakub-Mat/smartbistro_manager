@@ -36,6 +36,7 @@
   background-color: var(--bg);
   justify-content: space-around;
   border-bottom: #1A1F16 solid;
+  position: relative;
 }
 #layout-grid #content {
   grid-area: content;
@@ -52,4 +53,100 @@
   margin: 12px  0 12px 15px;
   display: flex;
   padding: 0;
+}
+
+/* Hamburger icon - hidden on desktop */
+#hamburgerIcon{
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+#hamburgerMenuOverlay{
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg);
+  border-bottom: var(--componentBorder);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  z-index: 1000;
+}
+
+#hamburgerMenuOverlay #sideMenu{
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px 20px;
+}
+
+#hamburgerMenuOverlay #sideMenu a{
+  text-decoration: none;
+}
+
+@media (max-width: 1100px){
+  /* switch to single column layout and hide sidebar */
+  #layout-grid{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "topbar"
+      "content";
+  }
+
+  #layout-grid > #sideMenu{
+    display: none;
+  }
+
+  /* show hamburger on smaller screens */
+  #hamburgerIcon{ display: flex; }
+
+  /* compact topbar text when hamburger mode is active */
+  #topBar .iconLabelLabel{
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+
+  }
+
+  #topBar .iconLabelIcon{
+    height: 45px;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px){
+  /* further reduce topbar text on very small screens */
+  #topBar .iconLabelLabel{
+    font-size: 0.80rem;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+
+  }
+
+  #topBar .iconLabelIcon{
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* reduce font size and margins for content titles on small screens */
+  .contentTitle{
+    font-size: 1rem;
+    margin: 8px 0 8px 10px;
+  }
 }

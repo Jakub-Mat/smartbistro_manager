@@ -47,12 +47,14 @@ export default function ProductDialog({
 }) {
   const [form, setForm] = useState(() => buildFormFromProduct(product))
   const [draggedItem, setDraggedItem] = useState(null)
+  const [dragOverZone, setDragOverZone] = useState(null)
 
   const availableIngredients = useMemo(() => ingredients, [ingredients])
 
   const resetForm = () => {
     setForm(createEmptyForm())
     setDraggedItem(null)
+    setDragOverZone(null)
   }
 
   const handleClose = () => {
@@ -64,12 +66,18 @@ export default function ProductDialog({
     setDraggedItem({ ingredient, source })
   }
 
-  const handleDragOver = (event) => {
+  const handleDragOver = (event, zone) => {
     event.preventDefault()
+    setDragOverZone(zone)
+  }
+
+  const handleDragLeave = () => {
+    setDragOverZone(null)
   }
 
   const handleDropToSelected = (event) => {
     event.preventDefault()
+    setDragOverZone(null)
     if (!draggedItem || draggedItem.source !== 'available') return
 
     setForm((previous) => {
@@ -102,6 +110,7 @@ export default function ProductDialog({
 
   const handleDropToAvailable = (event) => {
     event.preventDefault()
+    setDragOverZone(null)
     if (!draggedItem || draggedItem.source !== 'selected') return
 
     setForm((previous) => ({
@@ -113,6 +122,22 @@ export default function ProductDialog({
 
     setDraggedItem(null)
   }
+
+  /**
+   *Jak funguje drag & drop v tomto dialogu:
+   *  1. Klikneš na ingredienci v "Dostupné suroviny" 
+   → handleDragStart: draggedItem = {ingredient, source: 'available'}
+
+  2. Táhneš ji nad "Vybrané suroviny"
+   → handleDragOver: dragOverZone = 'selected' → zóna se zvýrazní modře
+
+  3. Opustíš zónu
+   → handleDragLeave: dragOverZone = null → zvýraznění zmizí
+
+  4. Pustíš myš
+   → handleDropToSelected: přidá ingredienci do selectedIngredients 
+   
+   */
 
   const handleIncreaseQty = (ingredientName) => {
     setForm((previous) => ({
@@ -211,9 +236,10 @@ export default function ProductDialog({
 
             <div className="productDialogColumns">
               <section
-                className="productDialogAvailableZone"
+                className={`productDialogAvailableZone ${dragOverZone === 'available' ? 'dragover' : ''}`}
                     onDrop={handleDropToAvailable}
-                    onDragOver={handleDragOver}
+                    onDragOver={(e) => handleDragOver(e, 'available')}
+                    onDragLeave={handleDragLeave}
               >
                 <h4 className="productDialogSectionTitle">Dostupné suroviny</h4>
                 <div className="productDialogIngredients">
@@ -236,9 +262,10 @@ export default function ProductDialog({
               </section>
 
               <section
-                className="productDialogSelectedZone"
+                className={`productDialogSelectedZone ${dragOverZone === 'selected' ? 'dragover' : ''}`}
                   onDrop={handleDropToSelected}
-                  onDragOver={handleDragOver}
+                  onDragOver={(e) => handleDragOver(e, 'selected')}
+                  onDragLeave={handleDragLeave}
               >
                 <h4 className="productDialogSectionTitle">Vybrané suroviny</h4>
                 {/*<p className="productDialogHint">*/}
