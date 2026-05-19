@@ -36,24 +36,43 @@
     position: relative;
 }
 
+#orderTableWrapper{
+    min-width: 0;
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+}
+
 #stockTable {
     grid-area: stockTable;
-    overflow-y: auto;
     background-color: transparent;
     border: var(--componentBorder);
     border-radius: var(--componentBorderRadius);
     min-width: 0;
     min-height: 350px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#stockTableWrapper{
+    min-width: 0;
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
 }
 
 #orderTable{
     grid-area: orderTable;
-    overflow-y: auto;
     background-color: transparent;
     border: var(--componentBorder);
     border-radius: var(--componentBorderRadius);
     min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
 }
 
 @media (max-width: 1100px) {

@@ -35,6 +35,7 @@ export default function StockManagementPage() {
         writeJson(STORAGE_KEYS.filters, filters)
     }, [filters])
 
+    // Aktualizuje jeden klíč ve stavu `filters` (např. query, stockState, sortBy)
     const handleFilterChange = (key, value) => {
         setFilters((previous) => ({
             ...previous,
@@ -42,10 +43,12 @@ export default function StockManagementPage() {
         }))
     }
 
+    // Resetuje filtry na výchozí hodnoty
     const handleResetFilters = () => {
         setFilters(DEFAULT_FILTERS)
     }
 
+    // Otevře dialog pro úpravu množství dané ingredience
     const openIngredientDialog = (ingredient, nextActionType) => {
         setSelectedIngredient(ingredient)
         setActionType(nextActionType)
@@ -53,14 +56,26 @@ export default function StockManagementPage() {
         setIsDialogOpen(true)
     }
 
+    // Otevře dialog pro přidání - pomocná funkce volající `openIngredientDialog`
     const handlePlusButtonClick = (ingredient) => {
         openIngredientDialog(ingredient, 'plus')
     }
 
+    // Otevře dialog pro odebrání - pomocná funkce volající `openIngredientDialog`
     const handleMinusButtonClick = (ingredient) => {
         openIngredientDialog(ingredient, 'minus')
     }
 
+    // Přímo nastaví konkrétní množství v inline inputu tabulky (bez dialogu)
+    const handleSetInputQty = (ingredient, newQty) => {
+        setIngredients((previousIngredients) =>
+            previousIngredients.map((ing) =>
+                ing.name === ingredient.name ? { ...ing, qty: Math.max(0, Number(newQty) || 0) } : ing
+            )
+        )
+    }
+
+    // Zavře dialog a resetuje dialog-related stav
     const handleCloseDialog = () => {
         setIsDialogOpen(false)
         setSelectedIngredient(null)
@@ -68,6 +83,7 @@ export default function StockManagementPage() {
         setActionType('plus')
     }
 
+    // Potvrdí akci z dialogu - přidá nebo odebere množství podle actionType
     const handleConfirmAction = () => {
         if (!selectedIngredient) return
 
@@ -85,49 +101,44 @@ export default function StockManagementPage() {
         handleCloseDialog()
     }
 
+    // Aplikuje vyhledávání, filtrování a řazení na ingredience
+    const getProcessedIngredients = (items) => {
+        let result = [...items]
 
-    let filteredIngredients = [...ingredients]
+        // Filtr: vyhledávání podle textu
+        if (filters.query.trim()) {
+            const searchText = filters.query.trim().toLowerCase()
+            result = result.filter((ingredient) => ingredient.name.toLowerCase().includes(searchText))
+        }
 
-    if (filters.query.trim()) {
-        const searchText = filters.query.trim().toLowerCase()
-        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.name.toLowerCase().includes(searchText))
+        // Filtr: stav zásoby (pod/na/nad minimem)
+        if (filters.stockState === 'belowMin') {
+            result = result.filter((ingredient) => ingredient.qty < ingredient.min_qty)
+        } else if (filters.stockState === 'atMin') {
+            result = result.filter((ingredient) => ingredient.qty === ingredient.min_qty)
+        } else if (filters.stockState === 'aboveMin') {
+            result = result.filter((ingredient) => ingredient.qty > ingredient.min_qty)
+        }
+
+        // Řazení: podle vybraného kritéria
+        if (filters.sortBy === 'nameAsc') {
+            result.sort((a, b) => a.name.localeCompare(b.name))
+        } else if (filters.sortBy === 'stockAsc') {
+            result.sort((a, b) => a.qty - b.qty)
+        } else if (filters.sortBy === 'stockDesc') {
+            result.sort((a, b) => b.qty - a.qty)
+        } else if (filters.sortBy === 'priceAsc') {
+            result.sort((a, b) => a.price - b.price)
+        } else if (filters.sortBy === 'priceDesc') {
+            result.sort((a, b) => b.price - a.price)
+        } else if (filters.sortBy === 'priority') {
+            result.sort((a, b) => getPriority(a) - getPriority(b))
+        }
+
+        return result
     }
 
-    if (filters.stockState === 'belowMin') {
-        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.qty < ingredient.min_qty)
-    }
-
-    if (filters.stockState === 'atMin') {
-        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.qty === ingredient.min_qty)
-    }
-
-    if (filters.stockState === 'aboveMin') {
-        filteredIngredients = filteredIngredients.filter((ingredient) => ingredient.qty > ingredient.min_qty)
-    }
-
-    if (filters.sortBy === 'nameAsc') {
-        filteredIngredients.sort((a, b) => a.name.localeCompare(b.name))
-    }
-
-    if (filters.sortBy === 'stockAsc') {
-        filteredIngredients.sort((a, b) => a.qty - b.qty)
-    }
-
-    if (filters.sortBy === 'stockDesc') {
-        filteredIngredients.sort((a, b) => b.qty - a.qty)
-    }
-
-    if (filters.sortBy === 'priceAsc') {
-        filteredIngredients.sort((a, b) => a.price - b.price)
-    }
-
-    if (filters.sortBy === 'priceDesc') {
-        filteredIngredients.sort((a, b) => b.price - a.price)
-    }
-
-    if (filters.sortBy === 'priority') {
-        filteredIngredients.sort((a, b) => getPriority(a) - getPriority(b))
-    }
+    const filteredIngredients = getProcessedIngredients(ingredients)
 
     return (
         <div id="content" className="stockManagementContent">
@@ -200,6 +211,7 @@ export default function StockManagementPage() {
                         ingredients={filteredIngredients}
                         onPlusButtonClick={handlePlusButtonClick}
                         onMinusButtonClick={handleMinusButtonClick}
+                        onSetQuantity={handleSetInputQty}
                         actionTitle="Úprava skladu"
                     />
                 </div>

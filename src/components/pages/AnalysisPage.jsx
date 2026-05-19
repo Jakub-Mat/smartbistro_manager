@@ -13,7 +13,6 @@ const DEFAULT_FILTERS = {
     hiddenLine: '',
 }
 
-const CURRENT_YEAR = 2026
 const currencyFormatter = new Intl.NumberFormat('cs-CZ', {
     style: 'currency',
     currency: 'CZK',
@@ -52,17 +51,6 @@ const generateYAxisOptions = (maxValue) => {
     return options
 }
 
-const normalizeFilters = (filters, maxYAxisValue) => {
-    const nextYFrom = Math.min(Math.max(filters.yFrom, 0), maxYAxisValue)
-    const nextYTo = Math.min(Math.max(filters.yTo, nextYFrom), maxYAxisValue)
-
-    return {
-        ...filters,
-        yFrom: nextYFrom,
-        yTo: nextYTo,
-    }
-}
-
 export default function AnalysisPage() {
 
     const orders = useOrders()
@@ -79,15 +67,32 @@ export default function AnalysisPage() {
         ...DEFAULT_FILTERS,
         yTo: maxYAxisValue,
     }))
-    const normalizedAppliedFilters = normalizeFilters(appliedFilters, maxYAxisValue)
-    const normalizedDraftFilters = normalizeFilters(draftFilters, maxYAxisValue)
 
-    const currentYearFinancialState = orders.reduce((sum, order) => {
+    // Součet příjmů podle aktuálně aplikovaných filtrů (stejné jako v grafu).
+    const filteredFinancialState = orders.reduce((sum, order) => {
         if (!order?.timestamp) return sum
         const orderDate = new Date(order.timestamp)
         if (Number.isNaN(orderDate.getTime())) return sum
-        if (orderDate.getUTCFullYear() !== CURRENT_YEAR) return sum
-        return sum + (Number.isFinite(order.totalPrice) ? order.totalPrice : 0)
+        
+        // Check month range
+        const monthIndex = orderDate.getUTCMonth()
+        if (monthIndex < appliedFilters.xFrom || monthIndex > appliedFilters.xTo) {
+            return sum
+        }
+        
+        // Check price range
+        const price = Number.isFinite(order.totalPrice) ? order.totalPrice : 0
+        if (price < appliedFilters.yFrom || price > appliedFilters.yTo) {
+            return sum
+        }
+        
+        // Check hidden line (year)
+        const year = orderDate.getUTCFullYear()
+        if (appliedFilters.hiddenLine === `year${year}`) {
+            return sum
+        }
+        
+        return sum + price
     }, 0)
 
     const monthOptions = LINE_CHART_LABELS.map((label, index) => ({
@@ -111,35 +116,56 @@ export default function AnalysisPage() {
         }))
     }
 
+    // Nastaví pouze "yFrom" (už nepropaguje změnu do `yTo`).
+    // Zároveň zabrání, aby "yFrom" bylo >= "yTo" (rovnost rozbíjela graf).
     const handleYFromChange = (value) => {
-        setDraftFilters((previous) => ({
-            ...previous,
-            yFrom: Math.max(value, 0),
-            yTo: Math.max(Math.max(value, 0), previous.yTo),
-        }))
+        setDraftFilters((previous) => {
+            const v = Math.max(value, 0)
+            const adjusted = v >= previous.yTo ? Math.max(0, previous.yTo - 1) : v
+            return {
+                ...previous,
+                yFrom: adjusted,
+            }
+        })
     }
 
+    // Nastaví pouze "yTo" (už nepropaguje změnu do "yFrom").
+    // Zároveň zabrání, aby "yTo" bylo <= "yFrom".
     const handleYToChange = (value) => {
-        setDraftFilters((previous) => ({
-            ...previous,
-            yFrom: Math.min(previous.yFrom, value),
-            yTo: Math.max(value, 0),
-        }))
+        setDraftFilters((previous) => {
+            const v = Math.max(value, 0)
+            const adjusted = v <= previous.yFrom ? previous.yFrom + 1 : v
+            return {
+                ...previous,
+                yTo: adjusted,
+            }
+        })
     }
 
+    // Handler pro změnu viditelnosti let - když se vybere jeden rok, skryje se druhý
+    // Příklad: vybere-li se 2026, skryje se 2025 (hiddenLine = 'year2025')
     const handleLineVisibilityChange = (value) => {
+        let hiddenLine = ''
+        if (value === 'year2026') {
+            // Pokud je vybrán 2026, skryj 2025
+            hiddenLine = 'year2025'
+        } else if (value === 'year2025') {
+            // Pokud je vybrán 2025, skryj 2026
+            hiddenLine = 'year2026'
+        }
+        // Pokud je vybrán "Všechny roky", hiddenLine zůstane prázdný (nic se neskryje)
         setDraftFilters((previous) => ({
             ...previous,
-            hiddenLine: value,
+            hiddenLine: hiddenLine,
         }))
     }
 
     const handleApply = () => {
-        setAppliedFilters(normalizedDraftFilters)
+        setAppliedFilters(draftFilters)
     }
 
     const handleCancel = () => {
-        setDraftFilters(normalizedAppliedFilters)
+        setDraftFilters(appliedFilters)
     }
 
     return (
@@ -150,23 +176,23 @@ export default function AnalysisPage() {
                         <ContentTitle text={"Přehled přijmů za rok 2025 a 2026"}/>
                         <div className="analysisChartContainer">
                             <LineChart
-                                xFrom={normalizedAppliedFilters.xFrom}
-                                xTo={normalizedAppliedFilters.xTo}
-                                yFrom={normalizedAppliedFilters.yFrom}
-                                yTo={normalizedAppliedFilters.yTo}
-                                hiddenLine={normalizedAppliedFilters.hiddenLine}
+                                xFrom={appliedFilters.xFrom}
+                                xTo={appliedFilters.xTo}
+                                yFrom={appliedFilters.yFrom}
+                                yTo={appliedFilters.yTo}
+                                hiddenLine={appliedFilters.hiddenLine}
                             />
                         </div>
                     </div>
                     <AnalysisFiltersPanel
-                        draftFilters={normalizedDraftFilters}
+                        draftFilters={draftFilters}
                         monthOptions={monthOptions}
                         yAxisOptions={yAxisOptions}
                         onXFromChange={handleXFromChange}
                         onXToChange={handleXToChange}
                         onYFromChange={handleYFromChange}
                         onYToChange={handleYToChange}
-                        lineVisibilityValue={normalizedDraftFilters.hiddenLine}
+                        lineVisibilityValue={draftFilters.hiddenLine}
                         onLineVisibilityChange={handleLineVisibilityChange}
                         onApply={handleApply}
                         onCancel={handleCancel}
@@ -174,9 +200,9 @@ export default function AnalysisPage() {
                 </section>
 
                 <div className="analysisFinancialPanel">
-                    <span className="analysisFinancialLabel">Aktuální finanční stav:</span>
+                    <span className="analysisFinancialLabel">Finanční příjem:</span>
                     <strong className="analysisFinancialValue">
-                        {currencyFormatter.format(currentYearFinancialState)}
+                        {currencyFormatter.format(filteredFinancialState)}
                     </strong>
                 </div>
 

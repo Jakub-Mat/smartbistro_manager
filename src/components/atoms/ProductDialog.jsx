@@ -234,6 +234,9 @@ export default function ProductDialog({
             </RadioGroup>
           </FormControl>
 
+          <div className="productDialogHint" style={{padding: '3px 0', textAlign: 'center', color: '#666'}}>
+                Přetáhněte dostupné suroviny do vybraných
+          </div>
             <div className="productDialogColumns">
               <section
                 className={`productDialogAvailableZone ${dragOverZone === 'available' ? 'dragover' : ''}`}
@@ -261,6 +264,7 @@ export default function ProductDialog({
                   </div>
               </section>
 
+              
               <section
                 className={`productDialogSelectedZone ${dragOverZone === 'selected' ? 'dragover' : ''}`}
                   onDrop={handleDropToSelected}

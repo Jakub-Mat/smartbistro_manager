@@ -22,7 +22,7 @@ export default function AnalysisFiltersPanel({
             <h3>Filtrace grafu</h3>
 
             <AxisSelectRange
-                title="Rozsah osy X"
+                title="Rozsah měsíců"
                 options={monthOptions}
                 fromValue={draftFilters.xFrom}
                 toValue={draftFilters.xTo}
@@ -31,7 +31,7 @@ export default function AnalysisFiltersPanel({
             />
 
             <AxisNumberRange
-                title="Rozsah osy Y"
+                title="Finanční rozsah (Kč)"
                 options={yAxisOptions}
                 fromValue={draftFilters.yFrom}
                 toValue={draftFilters.yTo}

@@ -19,6 +19,7 @@ export default function OrderTable() {
         (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
     )
 
+    // Načte font s podporou češtiny, aby se PDF správně zobrazovalo.
     const loadUnicodeFont = async (doc) => {
         const response = await fetch('/fonts/arial.ttf')
         if (!response.ok) {
@@ -41,24 +42,25 @@ export default function OrderTable() {
         doc.setFont('ArialUnicode')
     }
 
+    // Převádí položky objednávky do řádků pro PDF tabulku.
     const getProductRows = (products = []) => {
         const rows = products.map((product, index) => {
-            if (typeof product === 'string') {
-                return [product, '1x']
-            }
-
-            const productName = product?.name ?? `Produkt ${index + 1}`
+            const productName = product?.name ?? (typeof product === 'string' ? product : `Produkt ${index + 1}`)
             const productQuantity = Number(product?.quantity ?? product?.qty ?? 1)
-            return [productName, `${productQuantity}x`]
+            const unitPrice = Number(product?.unitPrice ?? 0)
+            const lineTotal = unitPrice * productQuantity
+            return [productName, `${productQuantity}x`, `${lineTotal} Kč`]
         })
 
         if (rows.length === 0) {
-            return [['Bez položek', '-']]
+            return [['Bez položek', '-', '-']]
         }
 
         return rows
     }
 
+    // Vytvoří PDF, zapíše základní údaje o objednávce, doplní tabulku položek
+    // a nakonec otevře výsledný soubor v nové kartě prohlížeče.
     const handlePdfClick = async (order) => {
         const doc = new jsPDF()
     
@@ -74,7 +76,7 @@ export default function OrderTable() {
     
         autoTable(doc, {
             startY: 48,
-            head: [['Produkt', 'Množství']],
+            head: [['Produkt', 'Množství','Cena']],
                 styles: {
                     font: 'ArialUnicode',
                     fontStyle: 'normal',

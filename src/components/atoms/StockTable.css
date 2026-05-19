@@ -21,3 +21,31 @@
     }
 
 }
+
+.stockButton {
+    padding: 6px;
+    min-width: 36px;
+    min-height: 36px;
+}
+
+.stockQuantityInput {
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 4px;
+    height: 30px;
+    line-height: 28px;
+    font-size: 0.95rem;
+    padding: 2px 6px;
+    box-sizing: border-box;
+}
+
+.stockTableRightCell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* Smaller input on very small screens */
+@media (max-width: 420px) {
+    .stockQuantityInput { width: 42px; }
+}

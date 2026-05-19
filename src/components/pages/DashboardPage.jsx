@@ -30,6 +30,7 @@ export default function DashboardPage() {
     const [orderQty, setOrderQty] = useState(0)
     const [actionType, setActionType] = useState('plus')
 
+    // Otevře dialog pro upravení množství ingredience
     const openIngredientDialog = (ingredient, nextActionType) => {
         const defaultQty = nextActionType === 'minus'
             ? Math.min(ingredient.qty, Math.max(ingredient.qty - ingredient.min_qty, 1))
@@ -41,15 +42,17 @@ export default function DashboardPage() {
         setIsOrderDialogOpen(true)
     }
 
-    // Otevře dialog objednávky a nastaví výchozí množství na dorovnání minima
+    // Handler pro tlačítko přidání - otevře dialog pro přidání ingredience
     const handlePlusButtonClick = (ingredient) => {
         openIngredientDialog(ingredient, 'plus')
     }
 
+    // Handler pro tlačítko odebrání - otevře dialog pro odebrání ingredience
     const handleMinusButtonClick = (ingredient) => {
         openIngredientDialog(ingredient, 'minus')
     }
 
+    // Zavře dialog a resetuje všechny související stavy
     const handleCloseDialog = () => {
         setIsOrderDialogOpen(false)
         setSelectedIngredient(null)
@@ -57,6 +60,7 @@ export default function DashboardPage() {
         setActionType('plus')
     }
 
+    // Potvrdí změnu množství ingredience a aktualizuje úložiště
     const handleConfirmOrder = () => {
         if (!selectedIngredient) return
 
@@ -77,7 +81,6 @@ export default function DashboardPage() {
         handleCloseDialog()
     }
 
-    //---------zobrazení obsahu dashboardu: graf, tabulka skladu a tabulka objednávek----------------
     return (
         <>
             <div id="dashboardContent">
@@ -94,15 +97,12 @@ export default function DashboardPage() {
                     confirmText={actionType === 'minus' ? 'Odstranit' : 'Přidat'}
                     cancelText="Zrušit"
                 />
-                {/* Graf přehledů zisku */}
                 <div id="linechart">
                     <ContentTitle text={"Přehled přijmů za rok 2025 a 2026"}/>
                     <div id="chartWrapper">
                         <LineChart/>
                     </div>
-
                 </div>
-                {/*Tabulka položek ve skladu s tlačítkem rychlého objednání*/}
                 <div id="stockTable">
                     <ContentTitle text="Sklad surovin"/>
 
@@ -116,12 +116,12 @@ export default function DashboardPage() {
                         />
                     </div>
                 </div>
-                <div id="orderTable">
+                <section id="orderTable">
                     <ContentTitle text="Aktuální objednávky"/>
                     <div id="orderTableWrapper">
-                        <OrderTable onPlusButtonClick={undefined}/>
+                        <OrderTable onPlusButtonClick={undefined} />
                     </div>
-                </div>
+                </section>
             </div>
         </>
     )

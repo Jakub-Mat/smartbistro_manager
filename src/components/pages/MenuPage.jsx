@@ -16,12 +16,13 @@ export default function MenuPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
 
-  // Otevře dialog pro vytvoření nového produktu.
+  // Otevře dialog pro vytvoření nového produktu
   const openCreateDialog = () => {
     setSelectedProduct(null)
     setIsDialogOpen(true)
   }
 
+  // Otevře dialog pro úpravu vybraného produktu
   const openEditDialog = (product) => {
     setSelectedProduct(product)
     setIsDialogOpen(true)

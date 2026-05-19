@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -16,12 +17,27 @@ export default function StockTable({
     onMinusButtonClick,
     showMinusButton = true,
     actionTitle = 'Úprava skladu',
+    onSetQuantity,
 }) {
 
     const rows = (ingredients ?? []).map((ingredient, index) => ({
       ...ingredient,
       originalIndex: index, // kvuli stabilnimu razeni
     }))
+
+    const [quantities, setQuantities] = useState({})
+
+    useEffect(() => {
+        const map = {}
+        ;(ingredients ?? []).forEach((ing) => {
+            map[ing.name] = ing.qty
+        })
+        // update state asynchronously to avoid synchronous setState in effect
+        const t = setTimeout(() => setQuantities(map), 0)
+        return () => clearTimeout(t)
+    }, [ingredients])
+
+    const isStockRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/stock')
 
     return (
         <TableContainer component={Paper} sx={{backgroundColor: "inherit"}} id="stockTableContainer">
@@ -58,7 +74,7 @@ export default function StockTable({
 
                             <TableCell align="right">{row.min_qty}</TableCell>
                             <TableCell align="right">{row.price}</TableCell>
-                            <TableCell align="center" sx={{ width: '96px'}}>
+                            <TableCell align="center" className="stockTableRightCell">
                                 {showMinusButton && (
                                     <IconButton
                                         disabled={row.qty <= 0}
@@ -68,6 +84,33 @@ export default function StockTable({
                                         <RemoveIcon style={{color: "#1A1F16", margin: '0'}}/>
                                     </IconButton>
                                 )}
+
+                                {isStockRoute && (
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        value={quantities[row.name] ?? row.qty}
+                                        onChange={(e) => {
+                                            const raw = e.target.value
+                                            setQuantities((prev) => ({ ...prev, [row.name]: raw }))
+                                        }}
+                                        onBlur={(e) => {
+                                            const raw = e.target.value
+                                            const parsed = Number(raw)
+                                            if (Number.isFinite(parsed) && parsed >= 0) {
+                                                const normalized = Math.round(parsed)
+                                                setQuantities((prev) => ({ ...prev, [row.name]: normalized }))
+                                                onSetQuantity?.(row, normalized)
+                                            } else {
+                                                setQuantities((prev) => ({ ...prev, [row.name]: row.qty }))
+                                            }
+                                        }}
+                                        onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
+                                        className="stockQuantityInput"
+                                        style={{ width: '56px' }}
+                                    />
+                                )}
+
                                 <IconButton
                                     aria-label={`add ${row.name}`}
                                     onClick={() => onPlusButtonClick?.(row)}

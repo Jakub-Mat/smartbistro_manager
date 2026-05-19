@@ -6,6 +6,24 @@ export default function AxisNumberRange({
 	onToChange,
 	options = null,
 }) {
+	// from nesmí být rovno to (ani větší), proto:
+	// - z nabídky pro "from" odstraníme max. hodnotu
+	// - a navíc "from" filtrujeme tak, aby vždy bylo < aktuálního toValue
+	// - pro "to" naopak povolíme pouze hodnoty > aktuálního "fromValue"
+	const baseFromOptions = options && options.length > 1 ? options.slice(0, -1) : options
+	const fromOptions = options ? baseFromOptions.filter((opt) => opt.value < toValue) : baseFromOptions
+	const toOptions = options ? options.filter((opt) => opt.value > fromValue) : options
+
+	// Handlery jen předávají hodnoty rodiči.
+	// Validaci vztahu "from < to" řešíme výběrem validních možností výše.
+	const handleFromChange = (nextFrom) => {
+		onFromChange(nextFrom)
+	}
+
+	const handleToChange = (nextTo) => {
+		onToChange(nextTo)
+	}
+
 	return (
 		<div className="filterBlock">
 			<span className="filterLabel">{title}</span>
@@ -15,9 +33,9 @@ export default function AxisNumberRange({
 					{options ? (
 						<select
 							value={fromValue}
-							onChange={(event) => onFromChange(Number(event.target.value))}
+							onChange={(event) => handleFromChange(Number(event.target.value))}
 						>
-							{options.map((option) => (
+							{fromOptions.map((option) => (
 								<option key={option.value} value={option.value}>
 									{option.label}
 								</option>
@@ -28,7 +46,7 @@ export default function AxisNumberRange({
 							type="number"
 							min={0}
 							value={fromValue}
-							onChange={(event) => onFromChange(Number(event.target.value))}
+							onChange={(event) => handleFromChange(Number(event.target.value))}
 						/>
 					)}
 				</label>
@@ -37,9 +55,9 @@ export default function AxisNumberRange({
 					{options ? (
 						<select
 							value={toValue}
-							onChange={(event) => onToChange(Number(event.target.value))}
+							onChange={(event) => handleToChange(Number(event.target.value))}
 						>
-							{options.map((option) => (
+							{toOptions.map((option) => (
 								<option key={option.value} value={option.value}>
 									{option.label}
 								</option>
@@ -50,7 +68,7 @@ export default function AxisNumberRange({
 							type="number"
 							min={0}
 							value={toValue}
-							onChange={(event) => onToChange(Number(event.target.value))}
+							onChange={(event) => handleToChange(Number(event.target.value))}
 						/>
 					)}
 				</label>

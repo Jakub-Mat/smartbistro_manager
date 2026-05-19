@@ -4,6 +4,9 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import {useState} from "react";
 import ProfileModal from "../atoms/ProfileModal.jsx";
 import SideMenu from "./SideMenu.jsx";
+import { appInfo } from "../../utils/dataConfig.js";
+
+
 export default function TopBar(){
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,8 +29,8 @@ export default function TopBar(){
                     onclick={() => setIsMenuOpen(v => !v)}
                 />
 
-                <IconLabel text="Best Bistro Burger" icon={MdStore(undefined)}/>
-                <IconLabel text="Jateční 26, Plzeň" icon={MdLocationOn(undefined)}/>
+                <IconLabel text={appInfo.storeName} icon={MdStore(undefined)}/>
+                <IconLabel text={appInfo.address} icon={MdLocationOn(undefined)}/>
                 <div style={{display: "flex", position: "relative" }}>
                     <IconLabel
                         text="Jakub M."
