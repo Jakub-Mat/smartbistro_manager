@@ -1,32 +1,25 @@
 import { initialIngredients, initialProducts, initialOrders } from './dataConfig.js'
 
-// Povolené stavy produktu v aplikaci.
-const PRODUCT_STATUSES = new Set(['enabledProduct', 'disabledProduct', 'hiddenProduct'])
+// Utility pro práci s `localStorage`.
+// Tento modul poskytuje:
+// - čtení/zápis JSON (`readJson`, `writeJson`)
+// - inicializaci lokálního úložiště s výchozími mocky (`seedLocalStorage`)
+// - zachované kompatibilní funkce `normalizeProduct(s)` (no-op)
+// - pomocné utilitky jako `getPriority` a event pro nové objednávky
 
-// Převede jeden produkt do jednotného tvaru.
-// Podporuje i starší formát s `enable` místo `status`.
+// No-op: funkce je zachována pro kompatibilitu s existujícími importy.
 export function normalizeProduct(product) {
-  if (!product || typeof product !== 'object') return product
-
-  const normalizedStatus = PRODUCT_STATUSES.has(product.status)
-    ? product.status
-    : typeof product.enable === 'boolean'
-      ? (product.enable ? 'enabledProduct' : 'disabledProduct')
-      : 'enabledProduct'
-
-  const { enable: _enable, ...rest } = product
-  return {
-    ...rest,
-    status: normalizedStatus,
-  }
+  return product
 }
 
-// Převede pole produktů přes normalizaci jednotlivých položek.
+// No-op verze pro kompatibilitu (vrací vstup bez změn).
 export function normalizeProducts(products) {
-  return Array.isArray(products) ? products.map(normalizeProduct) : products
+  return products
 }
 
 // Klíče, pod kterými aplikace ukládá data do localStorage.
+// Konstanta s klíči používanými pro ukládání v localStorage.
+// Použíj tyto klíče konzistentně v celé aplikaci.
 export const STORAGE_KEYS = {
   ingredients: 'smartbistro_ingredients',
   products: 'smartbistro_products',
@@ -34,39 +27,35 @@ export const STORAGE_KEYS = {
   filters: 'smartbistro_filters',
 }
 
-// Načte JSON z localStorage.
-// U produktů navíc zajistí jejich normalizaci na aktuální strukturu.
+// Načte JSON z `localStorage` a vrátí `fallback` v případě chyby nebo neexistence.
+// Neprovádí migrace ani normalizace — pouze parsuje uložená data.
 export function readJson(key, fallback) {
   try {
     const raw = localStorage.getItem(key)
     if (raw === null) return fallback
-    const parsed = JSON.parse(raw)
-    if (key === STORAGE_KEYS.products) {
-      return normalizeProducts(parsed)
-    }
-    return parsed
-  } catch {
+    return JSON.parse(raw)
+  } catch (e) {
+    console.warn(`readJson(${key}) failed, using fallback`, e)
     return fallback
   }
 }
 
 // Zapíše hodnotu do localStorage jako JSON.
+// Zapíše hodnotu do localStorage jako JSON (bez validace).
 export function writeJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value))
 }
 
-// Při prvním spuštění doplní do localStorage výchozí mock data.
-// U produktů zároveň migruje starší uložený formát na nový.
+// Při prvním spuštění doplní do `localStorage` výchozí mock data.
+// Pokud již existují data v `localStorage`, nechává je beze změny.
 export function seedLocalStorage() {
   if (localStorage.getItem(STORAGE_KEYS.ingredients) === null) {
     writeJson(STORAGE_KEYS.ingredients, initialIngredients)
   }
 
+  // Pokud products chybí, zapiš výchozí produkty. Pokud již existují, nic neměň.
   if (localStorage.getItem(STORAGE_KEYS.products) === null) {
     writeJson(STORAGE_KEYS.products, initialProducts)
-  } else {
-    const normalizedProducts = normalizeProducts(readJson(STORAGE_KEYS.products, initialProducts))
-    writeJson(STORAGE_KEYS.products, normalizedProducts)
   }
 
   if (localStorage.getItem(STORAGE_KEYS.orders) === null) {
@@ -76,6 +65,8 @@ export function seedLocalStorage() {
 
 // Pomocná priorita pro řazení skladové tabulky.
 // 0 = pod minimem, 1 = přesně minimum, 2 = ostatní.
+// Vrátí číselnou prioritu pro položku skladu (používá se při řazení).
+// 0 = pod minimem, 1 = přesně na minimu, 2 = ostatní.
 export const getPriority = (item) => {
   if (item.qty < item.min_qty) return 0
   if (item.qty === item.min_qty) return 1
@@ -83,9 +74,11 @@ export const getPriority = (item) => {
 }
 
 // Custom event, který oznamuje vytvoření nové objednávky.
+// Event vysílaný když je vytvořena nová objednávka (posluchače můžete registrovat v hooku např. `useOrders`).
 export const ORDER_CREATED_EVENT = 'smartbistro:orderCreated'
 
-// Vyvolá event pro ostatní části aplikace, aby si mohly obnovit data.
+// Vysílá CustomEvent s detailem nově vytvořené objednávky.
+// Ostatní části aplikace (např. hooky) mohou naslouchat tomuto eventu a aktualizovat data.
 export function dispatchOrderCreatedEvent(newOrder) {
   window.dispatchEvent(
     new CustomEvent(ORDER_CREATED_EVENT, { detail: newOrder })

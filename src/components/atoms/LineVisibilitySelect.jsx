@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 
+// Možnosti pro výběr zobrazeného roku.
+// Hodnota: '' = zobrazit všechny roky, 'year2026' = zobrazit pouze 2026,
+// 'year2025' = zobrazit pouze 2025. Barva slouží jen pro UI indikátor.
 const lineOptions = [
     { value: '', label: 'Všechny roky' },
     { value: 'year2026', label: '2026', color: '#4F9D69'},
@@ -12,7 +15,8 @@ export default function LineVisibilitySelect({ value, onChange }) {
     // Odkaz na dropdown element pro detekci kliknutí mimo něj
     const dropdownRef = useRef(null)
 
-    // Najde aktuálně vybranou možnost v seznamu podle hodnoty
+    // Najde aktuálně vybranou možnost v seznamu podle hodnoty. `value`
+    // je hodnota reprezentující, který rok chce uživatel VIDĚT.
     const currentOption = lineOptions.find(opt => opt.value === value)
 
     // Effect pro zavření dropdown menu při kliknutí mimo
@@ -27,7 +31,10 @@ export default function LineVisibilitySelect({ value, onChange }) {
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
 
-    // Handler pro výběr možnosti - zavolá onChange callback a zavře menu
+    // Handler pro výběr možnosti.
+    // Volá `onChange` s hodnotou, která reprezentuje vybraný viditelný rok
+    // (ne ID skrytého datasetu). Komponenta vyšší úrovně provede mapování
+    // na interní `hiddenLine` pokud je to potřeba.
     const handleSelect = (optionValue) => {
         onChange(optionValue)
         setIsOpen(false)

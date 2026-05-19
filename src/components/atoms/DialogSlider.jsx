@@ -36,7 +36,7 @@ export default function DialogSlider({
             </DialogContent>
             <DialogActions>
                 {/*tlačítka pro uzavření nebo potrvzení: */}
-                <Button onClick={onClose}>{cancelText}</Button>
+                <Button autoFocus onClick={onClose}>{cancelText}</Button>
                 <Button variant="contained" onClick={onConfirm}>
                     {confirmText}
                 </Button>

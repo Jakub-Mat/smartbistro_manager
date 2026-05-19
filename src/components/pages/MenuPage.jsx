@@ -67,7 +67,6 @@ export default function MenuPage() {
           className="productCardAdd"
           component="button"
           type="button"
-          aria-label="Přidat nový produkt"
           elevation={0}
           onClick={openCreateDialog}
         >

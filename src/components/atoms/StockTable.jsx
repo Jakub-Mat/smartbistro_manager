@@ -112,7 +112,6 @@ export default function StockTable({
                                 )}
 
                                 <IconButton
-                                    aria-label={`add ${row.name}`}
                                     onClick={() => onPlusButtonClick?.(row)}
                                     className="stockButton"
                                 >

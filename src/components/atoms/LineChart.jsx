@@ -24,6 +24,8 @@ ChartJS.register(
     Filler
 );
 
+// Popisky osy X (měsíce). Používají se také jako `LINE_CHART_LABELS` export
+// pro jiné komponenty (např. pro selektory rozsahu měsíců).
 const MONTH_LABELS = ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'];
 
 
@@ -54,7 +56,9 @@ const LineChart = ({
     
         const orders = useOrders()
 
-    // Sčítání totalPrice za jednotlivé měsíce pro konkrétní rok (UTC)
+    // Spočítá součet `totalPrice` pro každý měsíc zadaného roku (UTC).
+    // Vrací pole s 12 hodnotami, index 0 = leden ... index 11 = prosinec.
+    // Používáme UTC datum, aby byl výpočet konzistentní bez ohledu na časové pásmo.
     const getMonthlyTotals = (orders, year) => {
         const totals = new Array(12).fill(0);
         orders.forEach((o) => {
@@ -74,6 +78,9 @@ const LineChart = ({
     const DATA_2025 = getMonthlyTotals(orders, 2025);
     const DATA_2026 = getMonthlyTotals(orders, 2026);
 
+    // Definice datasetů pro jednotlivé roky. `id` zde odpovídá tomu,
+    // co ukládáme do `hiddenLine` (např. 'year2025'). Tento `id` se pak
+    // používá pro filtrování datasets ve `visibleDatasets`.
     const ALL_DATASETS = [
         {
             id: 'year2026',
@@ -99,10 +106,14 @@ const LineChart = ({
         },
     ];
 
+    // Z datasetů odstraníme ten, jehož `id` je uvedené v `hiddenLine`.
+    // Tím dosáhneme chování: pokud je `hiddenLine` např. 'year2025',
+    // bude skryt dataset 2025 a zobrazí se pouze 2026.
     const visibleDatasets = ALL_DATASETS
         .filter((dataset) => dataset.id !== hiddenLine)
         .map((dataset) => ({
             ...dataset,
+            // Ořízneme data podle vybraného rozsahu osy X (měsíce).
             data: (dataset.data || []).slice(safeFrom, safeTo + 1),
         }));
 

@@ -1,4 +1,4 @@
-# 🍔 SmartBistro Manager
+# 📊 SmartBistro Manager
 
 > Komplexní systém pro správu provozu a logistiku malé provozovny — školní projekt KIV/UUR
 
@@ -6,87 +6,57 @@
 
 ## 📋 O projektu
 
-SmartBistro Manager je webová aplikace navržená pro manažery a personál malých provozoven rychlého občerstvení. Propojuje správu skladu, tvorbu receptur a přehled objednávek do jednoho rozhraní a digitalizuje každodenní chod pobočky.
+SmartBistro Manager řeší tři hlavní oblasti provozu: objednávky v kiosku, správu menu a hlídání skladu. Aplikace je postavená jako demo nad `localStorage`, takže po prvním startu běží bez backendu a data se v rámci jedné prohlížečové instance ukládají lokálně.
 
-Projekt vznikl v rámci předmětu **KIV/UUR** a vychází z reálných zkušeností z provozu — důraz je kladen na praktické řešení skutečných problémů (zmatek v objednávkách, docházející suroviny, ruční inventura).
+Projekt je aktuálně nastavený na burgerový demo dataset. V repozitáři jsou připravené čtyři datové sady a aktivní se volí jediným exportem v [src/utils/dataConfig.js](src/utils/dataConfig.js).
 
-## 🧱 Datová architektura
+## 🧭 Jak aplikace funguje
 
-Aplikace je postavená tak, aby se data načetla při startu do `localStorage` a pak se v běžném provozu používala už jen odsud.
+Při startu se v [src/App.jsx](src/App.jsx) zavolá `seedLocalStorage()`, která doplní výchozí ingredience, produkty a objednávky do `localStorage`, pokud tam ještě nejsou. V aplikaci se pak čte přes `readJson(...)` a zapisuje přes `writeJson(...)` ze souboru [src/utils/storage.js](src/utils/storage.js).
 
-- [src/utils/dataConfig.js](src/utils/dataConfig.js) je jediné místo, kde se ručně přepíná aktivní dataset.
-- [src/utils/storage.js](src/utils/storage.js) řeší seedování, čtení, zápis a případné migrování dat v `localStorage`.
-- Komponenty a hooky už nemají číst mock data přímo, ale přes storage/helper vrstvu.
-- `initialIngredients`, `initialProducts` a `initialOrders` jsou seed data aktivního datasetu, ne samostatný runtime zdroj.
+Změny jsou tedy perzistentní v rámci prohlížeče, ale aplikace nemá serverovou databázi ani účetní logiku mimo lokální data.
 
-Aktuálně jsou připravené dvě datové sady:
-- `mockData1` pro burger provoz
-- `mockData2` pro malou kavárnu
+## 🖥️ Obrazovky
 
-Přepnutí znamená upravit jen export v [src/utils/dataConfig.js](src/utils/dataConfig.js).
+### 🧑‍💼 Manager část
 
----
+- **Přehled** ([/dashboard](src/App.jsx)) - dashboard skladu s rychlým upravením množství ingrediencí, stavový přehled skladu, graf tržeb a aktuální objednávky.
+- **Analýza** ([/analysis](src/App.jsx)) - line chart tržeb za roky 2025 a 2026 s filtry podle měsíců, částky a viditelnosti série, plus tabulka objednávek.
+- **Jídelní lístek** ([/menu](src/App.jsx)) - správa produktů, vytvoření nového produktu, úprava existujícího produktu a nastavení ceny i ingrediencí.
+- **Správa skladu** ([/stock](src/App.jsx)) - filtrování, řazení a ruční úprava množství ingrediencí včetně dialogu pro přidání nebo odebrání.
 
-## ✨ Funkce
+### 🛒 Kiosk část
 
-### 🛒 Objednávkový pohled (Kiosek / Pokladna)
-- Přehledné menu rozdělené do kategorií
-- Rychlé přidávání položek do košíku
-- Zpracování objednávky s okamžitým odpisem surovin ze skladu
-- Vhodné jak pro samoobslužný kiosek, tak pro obsluhu na kase
+- **Kiosek** ([/kiosk](src/App.jsx)) - výběr produktů, košík, změna množství položek a odeslání objednávky.
+- Při odeslání objednávky se validuje dostupnost surovin, odečtou se ze skladu a vytvoří se nový záznam objednávky.
 
-### 🧑‍💼 Manager pohled
-- **Dashboard skladu** — přehled stavu surovin, zvýraznění položek pod minimálním stavem
-- **Správa menu** — definice produktů, přiřazení surovin, nastavení prodejní ceny
-- **Analytika** — přehled prodejů v čase, přehled posledních objednávek a jejich hodnot
-- **Receptury** — hierarchická správa kategorií a produktů (Tree View)
+## 🧱 Datový model
 
----
+- Ingredience, produkty i objednávky jsou seedované z aktivního datasetu z [src/utils/dataConfig.js](src/utils/dataConfig.js).
+- Aktivní storage klíče a helpery jsou v [src/utils/storage.js](src/utils/storage.js).
+- Nová objednávka vyvolá custom event `smartbistro:orderCreated`, aby na ni mohly reagovat další části aplikace.
+- Ve skladu se sleduje jen množství a minimální množství, ne expirace, šarže ani alergeny.
 
-## 🗂️ Struktura aplikace
+## 🛠️ Použité technologie
 
-```
-SmartBistro Manager
-├── Objednávkový mód
-│   ├── Výběr produktů (menu)
-│   └── Košík & pokladna
-└── Manager mód
-    ├── Dashboard (sklad, upozornění)
-    ├── Správa menu & receptur
-    └── Analytika & přehledy
-```
+- **React** (JavaScriptová knihovna pro tvorbu uživatelských rozhraní)
+- Knihovny:
+    - **React Router** pro směrování / routing
+    - **MUI** pro UI komponenty
+    - **Chart.js** a **react-chartjs-2** pro analytický graf
+    - **react-icons** pro ikony
+    - **jspdf** a **jspdf-autotable** pro exporty a tabulky v PDF
+- **CamelCase** konvence pojmenování proměnných a funkcí
+- **Atomic design struktura** - komponenty se rozdělují na menší celky (atoms, molecules) a skládají do větších celků (organisms, pages)
 
----
+## ⚠️ Známá omezení
 
-## 🧩 Klíčové komponenty UI
-
-| Komponenta | Popis |
-|---|---|
-| **Data Grid (MUI X)** | Interaktivní tabulka skladu s filtrováním a inline editací množství |
-| **Analytický dashboard** | Grafy prodejů, přehled objednávek a tržeb |
-
----
-
-## ⚙️ Workflow
-
-1. **Konfigurace menu** — Manažer vytvoří produkt, přiřadí mu suroviny ze skladu a nastaví cenu.
-2. **Hlídání skladu** — Systém sleduje minimální stavy; položky pod limitem jsou zvýrazněny v dashboardu.
-3. **Příjem objednávky** — Po dokončení objednávky se automaticky odepíší suroviny ze skladu.
-4. **Analytika** — Manažer vidí přehled prodejů za zvolené období a hodnoty objednávek.
-
----
-
-## ⚠️ Známá omezení (Known Limitations)
-
-- Ze skladu lze objednávat bez omezení (není implementována žádná hlubší finanční logika)
-- Aplikace nehlídá doby spotřeby, alergeny ani šarže — sleduje pouze počty kusů
-- Aktuální nabídka závisí na zvoleném datasetu v [src/utils/dataConfig.js](src/utils/dataConfig.js)
-- Finanční logika je aktivní pouze při objednávání (bez napojení na skutečný „bankovní" účet)
-
----
+- Aplikace je bez backendu, takže s daty se pracuje pouze v `localStorage`.
+- Není zde autentizace ani role uživatelů.
+- Finanční logika není implementováná na externí systém a pracuje jen s lokálními cenami produktů a objednávek.
+- Sklad sleduje pouze kusové množství, ne doby spotřeby, alergeny ani dodavatele.
 
 ## 📝 TODO / Plánovaný rozvoj
-
 - Odpočet peněz z „banku" po nákupu zboží na sklad (zavedení cen produktů)
 - Evidence zaměstnanců (role, plat, docházka)
 - Detail objednávky (rozepsané položky, časy)
@@ -94,39 +64,20 @@ SmartBistro Manager
 - Podpora více kategorií produktů
 - Vytvořit funkční databázi
 
----
+## 🌐 GitHub a verzování
 
-## 🛠️ Použité technologie
+Celý projekt je dostupný ve veřejném GitHub repozitáři: [Jakub-Mat/smartbistro_manager](https://github.com/Jakub-Mat/smartbistro_manager).
 
-- **React** — frontend framework
-- **MUI (Material UI) + MUI X** — komponenty (Data Grid, Tree View)
-- **Atomic design struktura** — komponenty se rozdělují na menší celky (atoms, molecules) a skládají do větších celků (organisms, pages)
-- **CamelCase** — konvence pojmenování proměnných a funkcí
-- **jspdf** - tvorba PDF v aplikaci
+- Změny jsou verzované a průběžně dohledatelné v historii projektu.
+- README i zdrojový kód odpovídají aktuálnímu stavu aplikace v tomto repozitáři.
 
----
-
-## 🔄 Jak data fungují
-
-1. Při startu aplikace se v [App.jsx](src/App.jsx) zavolá `seedLocalStorage()`.
-2. `seedLocalStorage()` doplní do `localStorage` výchozí data z aktivního datasetu, pokud tam ještě nejsou.
-3. UI potom čte už jen přes `readJson(...)` a specializované hooky jako `useOrders`.
-4. Změny v aplikaci se zapisují zpět do `localStorage`, takže ten je za běhu zdrojem pravdy.
-5. Pokud chceš jiný demo dataset, změníš jen [src/utils/dataConfig.js](src/utils/dataConfig.js).
----
-
-## 🚀 Spuštění projektu
+## 🚀 Spuštění
 
 ```bash
-# Instalace závislostí
 npm install
-
-# Spuštění vývojového serveru
 npm run dev
 ```
 
----
+## 📚 Kontext projektu
 
-## 📚 Kontext
-
-Projekt je vypracován jako semestrální práce předmětu **KIV/UUR** na ZČU v Plzni. Cílem je demonstrovat schopnost navrhnout a implementovat komplexní uživatelské rozhraní s více funkčně odlišnými pohledy, pokročilými UI komponentami a reálnou doménovou logikou.
+Projekt vznikl jako semestrální práce na ZČU v Plzni. Cílem je ukázat vícepohledovou React aplikaci s lokální persistencí dat, správou skladu, správou nabídky a jednoduchou analytikou provozu.

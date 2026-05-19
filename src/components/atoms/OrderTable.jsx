@@ -129,7 +129,6 @@ export default function OrderTable() {
                             <TableCell align="center">
                                 <IconButton
                                     className="orderButton"
-                                    aria-label={`add ${order.id}`}
                                     onClick={() => handlePdfClick(order)}
                                 >
                                     <AddIcon style={{color: "#1A1F16"}}/>

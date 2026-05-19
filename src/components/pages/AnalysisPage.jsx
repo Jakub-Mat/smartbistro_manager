@@ -145,15 +145,20 @@ export default function AnalysisPage() {
     // Handler pro změnu viditelnosti let - když se vybere jeden rok, skryje se druhý
     // Příklad: vybere-li se 2026, skryje se 2025 (hiddenLine = 'year2025')
     const handleLineVisibilityChange = (value) => {
+        // `value` je hodnota vybraná v `LineVisibilitySelect` a reprezentuje
+        // který rok uživatel CHCE VIDĚT ('' = všechny roky, 'year2026' = zobrazit
+        // pouze 2026, 'year2025' = zobrazit pouze 2025). Interně ale ukládáme
+        // do filtru `hiddenLine` ID datasetu, který má být SKRYT. Abychom tedy
+        // při výběru roku zobrazili jen ten rok, nastavíme `hiddenLine` na
+        // opačný dataset. Např. když uživatel zvolí 'year2026', skryjeme
+        // 'year2025' — tím zůstane viditelný pouze 2026.
         let hiddenLine = ''
         if (value === 'year2026') {
-            // Pokud je vybrán 2026, skryj 2025
             hiddenLine = 'year2025'
         } else if (value === 'year2025') {
-            // Pokud je vybrán 2025, skryj 2026
             hiddenLine = 'year2026'
         }
-        // Pokud je vybrán "Všechny roky", hiddenLine zůstane prázdný (nic se neskryje)
+        // Pokud je vybráno '', necháme `hiddenLine` prázdné (zobrazí se oba roky)
         setDraftFilters((previous) => ({
             ...previous,
             hiddenLine: hiddenLine,
@@ -192,7 +197,20 @@ export default function AnalysisPage() {
                         onXToChange={handleXToChange}
                         onYFromChange={handleYFromChange}
                         onYToChange={handleYToChange}
-                        lineVisibilityValue={draftFilters.hiddenLine}
+                        lineVisibilityValue={
+                            // V `draftFilters.hiddenLine` ukládáme ID řádku, který má být
+                            // skryt (např. 'year2025'). Komponenta `LineVisibilitySelect`
+                            // ale očekává hodnotu reprezentující vybraný viditelný rok
+                            // ('' | 'year2026' | 'year2025'). Proto zde mapujeme uložené
+                            // ID skrytého řádku zpět na hodnotu, která odpovídá tomu,
+                            // co má být v selektu zobrazeno (tj. opačný rok nebo
+                            // prázdná hodnota pro "Všechny roky").
+                            draftFilters.hiddenLine === ''
+                                ? ''
+                                : draftFilters.hiddenLine === 'year2025'
+                                ? 'year2026'
+                                : 'year2025'
+                        }
                         onLineVisibilityChange={handleLineVisibilityChange}
                         onApply={handleApply}
                         onCancel={handleCancel}
